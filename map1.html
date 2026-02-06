@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卡拉斯科联合帝国战略地理图 v4.0 (修正版)</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* --- 基础样式 --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; background: #020617; color: #e2e8f0; overflow: hidden; }
+        
+        /* --- UI 层 --- */
+        .ui-overlay { position: absolute; top: 20px; left: 20px; z-index: 10; pointer-events: none; }
+        .header h1 { font-size: 24px; color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); letter-spacing: 2px; text-transform: uppercase; }
+        .header h2 { font-size: 14px; color: #94a3b8; margin-top: 5px; background: rgba(0,0,0,0.5); padding: 5px; display: inline-block; }
+        .legend { margin-top: 15px; background: rgba(15, 23, 42, 0.9); padding: 15px; border-left: 3px solid #f59e0b; border-radius: 0 4px 4px 0; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .legend-item { display: flex; align-items: center; font-size: 12px; margin-bottom: 8px; color: #cbd5e1; }
+        .dot { width: 12px; height: 12px; border-radius: 2px; margin-right: 10px; border: 1px solid rgba(255,255,255,0.2); }
+
+        /* --- 地图容器 --- */
+        #map-container { width: 100vw; height: 100vh; background: #020617; cursor: default; }
+
+        /* --- Tooltip --- */
+        .tooltip { position: absolute; padding: 15px; background: rgba(2, 6, 23, 0.95); border: 1px solid #38bdf8; border-radius: 4px; color: #fff; pointer-events: none; opacity: 0; transition: opacity 0.2s; max-width: 350px; z-index: 100; box-shadow: 0 0 25px rgba(56, 189, 248, 0.3); backdrop-filter: blur(8px); }
+        .tooltip h4 { color: #38bdf8; margin-bottom: 8px; font-size: 16px; border-bottom: 1px solid rgba(56, 189, 248, 0.3); padding-bottom: 5px; display: flex; align-items: center; justify-content: space-between; }
+        .tooltip .tag { font-size: 10px; background: #1e3a8a; padding: 2px 6px; border-radius: 2px; color: #60a5fa; border: 1px solid #60a5fa; text-transform: uppercase; }
+        .tooltip p { font-size: 13px; line-height: 1.6; color: #cbd5e1; margin-bottom: 0; }
+        .tooltip .meta { font-size: 11px; color: #94a3b8; margin-top: 10px; border-top: 1px dashed #334155; padding-top: 5px; }
+
+        /* --- SVG 元素样式 --- */
+        
+        /* 1. 环境层 */
+        .ocean-depth { fill: #0f172a; }
+        .mana-line { fill: none; stroke: #6366f1; stroke-width: 2; stroke-opacity: 0.1; filter: blur(4px); animation: manaFlow 10s infinite alternate; }
+
+        /* 2. 帝国层 */
+        .land-mass { fill: #1e293b; stroke: #475569; stroke-width: 2; filter: drop-shadow(4px 0 10px rgba(0,0,0,0.8)); }
+        .rail-track { fill: none; stroke: #64748b; stroke-width: 3; stroke-dasharray: 5,2; opacity: 0.5; }
+        .defense-zone { fill: url(#defensePattern); stroke: none; opacity: 0.3; }
+
+        /* 3. 桥梁层 */
+        .bridge-pylon { fill: #334155; stroke: #475569; stroke-width: 1; }
+        .bridge-deck { stroke: #334155; stroke-width: 12; stroke-linecap: butt; opacity: 0.8; }
+        .bridge-core { stroke: #f97316; stroke-width: 3; stroke-dasharray: 20,5; animation: trafficFlow 3s linear infinite; }
+        .bridge-node { fill: #0f172a; stroke: #94a3b8; stroke-width: 2; } /* 紧急避难所 */
+
+        /* 4. AC 层 */
+        .ac-wall { fill: none; stroke: #7c3aed; stroke-width: 4; filter: drop-shadow(0 0 5px #7c3aed); }
+        .ac-base { fill: #1e1b4b; opacity: 0.9; }
+        .ac-grid { stroke: #4c1d95; stroke-width: 1; opacity: 0.3; }
+        .ac-district { fill: transparent; stroke: none; transition: 0.3s; cursor: pointer; }
+        .ac-district:hover { fill: rgba(139, 92, 246, 0.3); }
+        .ac-district-highlight { fill: rgba(251, 191, 36, 0.2); stroke: #fbbf24; stroke-width: 1; stroke-dasharray: 4,2; }
+        .satellite-orbit { fill: none; stroke: #4c1d95; stroke-width: 1; stroke-dasharray: 10,10; opacity: 0.5; }
+        .satellite { fill: #ef4444; }
+
+        /* 5. 动画 */
+        @keyframes trafficFlow { from { stroke-dashoffset: 25; } to { stroke-dashoffset: 0; } }
+        @keyframes manaFlow { from { stroke-opacity: 0.05; } to { stroke-opacity: 0.15; } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        @keyframes pulse { 0% { r: 3; opacity: 0.5; } 50% { r: 5; opacity: 1; } 100% { r: 3; opacity: 0.5; } }
+
+    </style>
+</head>
+<body>
+
+<div class="ui-overlay">
+    <div class="header">
+        <h1>战略地理图 v4.0</h1>
+        <h2>[修正] 桥梁连接至 AC 边界口岸 • 增加帝国物流网与 AC 内部区划</h2>
+    </div>
+    <div class="legend">
+        <div class="legend-item"><div class="dot" style="background:#fbbf24"></div>新门市 (帝国起点)</div>
+        <div class="legend-item"><div class="dot" style="background:#ef4444"></div>中央岛 (55km处)</div>
+        <div class="legend-item"><div class="dot" style="background:#7c3aed"></div>AC 特区 (终点)</div>
+        <div class="legend-item"><div class="dot" style="border-bottom: 2px dashed #f97316; height:0;"></div>天门线轨道</div>
+        <div class="legend-item"><div class="dot" style="background:#6366f1; opacity:0.5"></div>魔力洋流 (Ley Lines)</div>
+    </div>
+</div>
+
+<div id="map-container"></div>
+<div id="tooltip" class="tooltip"></div>
+
+<script>
+    // --- 1. 核心参数设定 (1px = 100m) ---
+    const CONFIG = {
+        SCALE: 100, // 100m per pixel
+        BRIDGE_LENGTH: 1113, // 111.3 km = 111300m = 1113px
+        AC_RADIUS: 500, // 50km = 500px
+        CENTRAL_RADIUS: 80, // 8km = 80px
+        BRIDGE_START_X: 300,
+        BRIDGE_Y: 600
+    };
+
+    // 计算关键坐标
+    const COORDS = {
+        START: { x: CONFIG.BRIDGE_START_X, y: CONFIG.BRIDGE_Y },
+        // 中央岛：起点 + 556.5px
+        CENTRAL: { x: CONFIG.BRIDGE_START_X + 556.5, y: CONFIG.BRIDGE_Y },
+        // 桥梁终点 (连接到 AC 边界)：起点 + 1113px
+        BRIDGE_END: { x: CONFIG.BRIDGE_START_X + CONFIG.BRIDGE_LENGTH, y: CONFIG.BRIDGE_Y },
+        // AC 中心：桥梁终点 + 半径 (确保桥只到边缘)
+        AC_CENTER: { x: CONFIG.BRIDGE_START_X + CONFIG.BRIDGE_LENGTH + CONFIG.AC_RADIUS, y: CONFIG.BRIDGE_Y }
+    };
+
+    // --- 2. 初始化 D3 ---
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const svg = d3.select("#map-container").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", "0 0 2600 1200") // 扩大画布以容纳 AC
+        .style("background", "#020617");
+
+    const defs = svg.append("defs");
+
+    // 定义防御区纹理
+    const defensePattern = defs.append("pattern")
+        .attr("id", "defensePattern")
+        .attr("width", 8).attr("height", 8)
+        .attr("patternUnits", "userSpaceOnUse")
+        .attr("patternTransform", "rotate(45)");
+    defensePattern.append("rect").attr("width", 2).attr("height", 8).attr("fill", "#64748b").attr("opacity", 0.3);
+
+    const g = svg.append("g");
+
+    // 缩放控制
+    const zoom = d3.zoom()
+        .scaleExtent([0.3, 4])
+        .on("zoom", (e) => g.attr("transform", e.transform));
+    
+    // 初始视图：聚焦整个桥梁
+    svg.call(zoom).call(zoom.transform, d3.zoomIdentity.translate(width/2 - 800, height/2 - 400).scale(0.6));
+
+    // --- 3. 绘制图层 ---
+
+    // === Layer 1: 环境与魔力洋流 ===
+    // 模拟海底的魔力流动
+    const manaPath = d3.line().curve(d3.curveBasis);
+    for(let i=0; i<5; i++) {
+        let yOffset = (i - 2) * 200;
+        let points = [
+            [-200, 600 + yOffset],
+            [600, 500 + yOffset + Math.random()*100],
+            [1400, 700 + yOffset - Math.random()*100],
+            [2800, 600 + yOffset]
+        ];
+        g.append("path")
+            .attr("d", manaPath(points))
+            .attr("class", "mana-line")
+            .style("animation-delay", `${i}s`);
+    }
+
+    // === Layer 2: 帝国本土 (左侧) ===
+    const landPath = d3.line().curve(d3.curveCardinal);
+    const landPoints = [
+        [-100, 0], [400, 0], [350, 200], [380, 400], 
+        [300, 500], [CONFIG.BRIDGE_START_X, 580], [CONFIG.BRIDGE_START_X, 620], // 包裹新门市
+        [320, 700], [380, 850], [250, 1000], [-100, 1200]
+    ];
+    g.append("path")
+        .attr("d", landPath(landPoints))
+        .attr("class", "land-mass");
+
+    // 帝国铁路网 (物资运输)
+    g.append("path")
+        .attr("d", "M-100,300 Q150,350 300,600")
+        .attr("class", "rail-track");
+    g.append("path")
+        .attr("d", "M-100,900 Q150,850 300,600")
+        .attr("class", "rail-track");
+    
+    // 沿海防御区
+    g.append("rect")
+        .attr("x", 200).attr("y", 100).attr("width", 100).attr("height", 300)
+        .attr("class", "defense-zone")
+        .on("mouseover", e => showTip(e, "海岸防御阵列", "Coastal Defense", "密集部署防空导弹与魔导炮，保卫桥头堡安全。"));
+
+    // === Layer 3: AC 阿提菲克市 (右侧巨型结构) ===
+    const acGroup = g.append("g")
+        .attr("transform", `translate(${COORDS.AC_CENTER.x}, ${COORDS.AC_CENTER.y})`);
+
+    // 3.1 AC 基底与高墙
+    acGroup.append("circle")
+        .attr("r", CONFIG.AC_RADIUS)
+        .attr("class", "ac-base");
+    
+    acGroup.append("circle")
+        .attr("r", CONFIG.AC_RADIUS)
+        .attr("class", "ac-wall") // 边界高墙
+        .on("mouseover", e => showTip(e, "AC 绝境高墙", "The Barrier", "物理与魔法双重防御墙，严格限制出入。桥梁在此接入入境口岸。"));
+
+    // 3.2 内部区划 (Districts)
+    // 扇形生成器
+    const arc = d3.arc().innerRadius(0).outerRadius(CONFIG.AC_RADIUS);
+    
+    // 绘制 21 个区 (简化示意)
+    const districtCount = 21;
+    for(let i=0; i<districtCount; i++) {
+        let startAngle = (i * 2 * Math.PI) / districtCount;
+        let endAngle = ((i + 1) * 2 * Math.PI) / districtCount;
+        
+        let path = acGroup.append("path")
+            .attr("d", arc({ startAngle, endAngle }))
+            .attr("class", "ac-grid ac-district")
+            .on("mouseover", e => showTip(e, `第 ${i+1} 区`, `District ${i+1}`, "阿提菲克市行政/科研分区"));
+
+        // 特殊区域高亮
+        // 第1区：展示区 (正对大桥入口，即9点钟方向，对应 Math.PI * 1.5 左右，这里D3是从12点顺时针，所以大概在 270度)
+        // 简单起见，我们高亮几个特定扇区
+        if (i === 15) { // 假设这是第一区位置
+            path.attr("class", "ac-district-highlight")
+                .on("mouseover", e => showTip(e, "第一区：国际展示区", "Public Zone", "允许持有TVP许可的访客进入，包含博物馆与会展中心。"));
+        }
+        if (i === 18) { // 假设这是第19区
+            path.attr("class", "ac-district-highlight")
+                .on("mouseover", e => showTip(e, "第十九区：娱乐区", "Entertainment Zone", "包含银沙湾与星界幻梦乐园。"));
+        }
+    }
+
+    // 3.3 核心设施
+    // 水晶塔 (Crystal Tower)
+    acGroup.append("circle").attr("r", 50).attr("fill", "#ddd6fe").attr("opacity", 0.8);
+    acGroup.append("text").attr("y", 5).attr("text-anchor", "middle").style("font-size", "10px").text("理事会塔");
+
+    // 3.4 入境口岸 (Bridge Entry Port)
+    // 位于最左侧边缘 (-R, 0)
+    acGroup.append("rect")
+        .attr("x", -CONFIG.AC_RADIUS - 20)
+        .attr("y", -60)
+        .attr("width", 40)
+        .attr("height", 120)
+        .attr("fill", "#7c3aed")
+        .attr("stroke", "#fff")
+        .on("mouseover", e => showTip(e, "AC 入境口岸", "Border Control", "所有列车在此停靠，进行ACVMS系统审查与手环分发。"));
+
+    // 3.5 卫星防御网 (轨道)
+    acGroup.append("circle").attr("r", CONFIG.AC_RADIUS + 100).attr("class", "satellite-orbit");
+    acGroup.append("circle").attr("r", 8).attr("cx", CONFIG.AC_RADIUS + 100).attr("cy", 0).attr("class", "satellite")
+        .append("animateTransform").attr("attributeName", "transform").attr("type", "rotate").attr("from", "0 0 0").attr("to", "360 0 0").attr("dur", "20s").attr("repeatCount", "indefinite");
+
+
+    // === Layer 4: 跨海大桥 (K-A Bridge) ===
+    
+    // 4.1 桥身 (底板)
+    g.append("line")
+        .attr("x1", CONFIG.BRIDGE_START_X)
+        .attr("y1", CONFIG.BRIDGE_Y)
+        .attr("x2", COORDS.BRIDGE_END.x) // 修正：连接到 AC 边界
+        .attr("y2", CONFIG.BRIDGE_Y)
+        .attr("class", "bridge-deck");
+
+    // 4.2 轨道核心 (流动光效)
+    g.append("line")
+        .attr("x1", CONFIG.BRIDGE_START_X)
+        .attr("y1", CONFIG.BRIDGE_Y)
+        .attr("x2", COORDS.BRIDGE_END.x)
+        .attr("y2", CONFIG.BRIDGE_Y)
+        .attr("class", "bridge-core");
+
+    // 4.3 桥墩与节点 (每 10km = 100px 一个)
+    for(let x = CONFIG.BRIDGE_START_X + 100; x < COORDS.BRIDGE_END.x; x += 100) {
+        // 跳过中央岛区域
+        if (Math.abs(x - COORDS.CENTRAL.x) > 100) {
+            // 桥墩
+            g.append("rect")
+                .attr("x", x - 5).attr("y", CONFIG.BRIDGE_Y - 15)
+                .attr("width", 10).attr("height", 30)
+                .attr("class", "bridge-pylon");
+            
+            // 节点 (紧急避难所/观景台)
+            g.append("circle")
+                .attr("cx", x).attr("cy", CONFIG.BRIDGE_Y)
+                .attr("r", 4)
+                .attr("class", "bridge-node")
+                .on("mouseover", e => showTip(e, "K-A 节点", "Checkpoint", "包含紧急避难舱、维修通道与观光平台(上层)。"));
+        }
+    }
+
+    // === Layer 5: 中央管理岛 (Poseidon's Heart) ===
+    const centralGroup = g.append("g")
+        .attr("transform", `translate(${COORDS.CENTRAL.x}, ${COORDS.CENTRAL.y})`);
+
+    // 岛屿基座
+    centralGroup.append("circle")
+        .attr("r", CONFIG.CENTRAL_RADIUS)
+        .attr("fill", "#334155")
+        .attr("stroke", "#ef4444")
+        .attr("stroke-width", 2);
+    
+    // 内部设施：HQ
+    centralGroup.append("rect").attr("x", -20).attr("y", -20).attr("width", 40).attr("height", 40).attr("fill", "#1e293b");
+    centralGroup.append("text").attr("y", 5).attr("text-anchor", "middle").style("font-size", "10px").style("fill", "#fff").text("KABA");
+
+    // 防御圈 (JADCC)
+    centralGroup.append("circle")
+        .attr("r", CONFIG.CENTRAL_RADIUS + 10)
+        .attr("fill", "none")
+        .attr("stroke", "#ef4444")
+        .attr("stroke-dasharray", "5,5")
+        .style("animation", "rotate 60s linear infinite");
+    
+    // 触发区
+    centralGroup.append("circle")
+        .attr("r", CONFIG.CENTRAL_RADIUS)
+        .attr("fill", "transparent")
+        .on("mouseover", e => showTip(e, "中央管理岛", "Poseidon's Heart", "全桥中枢 (55.65km)。<br>KABA总部与联合防空指挥中心(JADCC)。"));
+
+    // === Layer 6: 新门市 (起点) ===
+    const xinmenGroup = g.append("g")
+        .attr("transform", `translate(${COORDS.START.x}, ${COORDS.START.y})`);
+    
+    xinmenGroup.append("circle").attr("r", 30).attr("fill", "#fbbf24").attr("opacity", 0.2);
+    xinmenGroup.append("circle").attr("r", 15).attr("fill", "#fbbf24")
+        .on("mouseover", e => showTip(e, "新门市", "Xinmen City", "K-A 大桥起点。帝国唯一的陆上连接口岸，设有海关与天门线始发站。"));
+    xinmenGroup.append("text").attr("y", -40).attr("text-anchor", "middle").attr("class", "label-main").text("新门市");
+
+
+    // === Layer 7: 标尺与辅助线 ===
+    // 标注 AC 入口距离
+    g.append("text")
+        .attr("x", COORDS.BRIDGE_END.x)
+        .attr("y", CONFIG.BRIDGE_Y + 40)
+        .attr("text-anchor", "middle")
+        .style("fill", "#7c3aed")
+        .style("font-size", "12px")
+        .text("111.3 km 终点站");
+
+    // 比例尺
+    g.append("line").attr("x1", 100).attr("y1", 1100).attr("x2", 200).attr("y2", 1100).attr("stroke", "#fff").attr("stroke-width", 2);
+    g.append("text").attr("x", 150).attr("y", 1090).attr("text-anchor", "middle").style("fill", "#fff").style("font-size", "10px").text("10 km");
+
+
+    // --- 4. 交互逻辑 ---
+    const tooltip = d3.select("#tooltip");
+
+    function showTip(event, title, subtitle, content) {
+        tooltip.style("opacity", 1)
+            .style("left", (event.pageX + 20) + "px")
+            .style("top", (event.pageY + 20) + "px")
+            .html(`
+                <h4>${title} <span class="tag">DATA</span></h4>
+                <div style="font-size:11px; color:#94a3b8; margin-bottom:5px;">${subtitle}</div>
+                <p>${content}</p>
+            `);
+    }
+
+    svg.on("click", () => {
+        tooltip.style("opacity", 0);
+    });
+
+</script>
+</body>
+</html>
