@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>异常上报系统 | KABA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --kaba-dark: #0a0e17;
+            --kaba-darker: #050811;
+            --kaba-cyan: #00f2ff;
+            --kaba-red: #ff1744;
+            --kaba-orange: #ff6b35;
+        }
+        
+        body {
+            background: var(--kaba-darker);
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        
+        .font-orbitron { font-family: 'Orbitron', monospace; }
+        
+        /* 紧急警报动画 */
+        @keyframes emergency-pulse {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.7);
+                background-color: rgba(255, 23, 68, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 0 20px rgba(255, 23, 68, 0);
+                background-color: rgba(255, 23, 68, 0.5);
+            }
+        }
+        
+        .emergency-indicator {
+            animation: emergency-pulse 2s infinite;
+        }
+        
+        /* 输入框样式 */
+        .kaba-input, .kaba-textarea, .kaba-select {
+            background: rgba(0, 0, 0, 0.6) !important;
+            border: 2px solid rgba(255, 255, 255, 0.1) !important;
+            color: #fff !important;
+            padding: 1rem;
+            width: 100%;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .kaba-input:focus, .kaba-textarea:focus, .kaba-select:focus {
+            border-color: var(--kaba-cyan) !important;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+        }
+        
+        .kaba-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* 威胁级别选择器 */
+        .threat-level {
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0.5;
+        }
+        
+        .threat-level.active {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        
+        .threat-level:hover {
+            opacity: 0.8;
+        }
+        
+        /* 提交按钮 */
+        .submit-btn {
+            background: linear-gradient(135deg, var(--kaba-red) 0%, #ff6b6b 100%);
+            color: #fff;
+            border: none;
+            padding: 1.2rem 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(255, 23, 68, 0.4);
+        }
+        
+        .submit-btn:hover {
+            box-shadow: 0 0 50px rgba(255, 23, 68, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #fff 0%, var(--kaba-red) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .submit-btn:hover::before {
+            opacity: 0.2;
+        }
+        
+        /* 紧急联络卡片 */
+        .emergency-card {
+            background: linear-gradient(135deg, rgba(255,23,68,0.1) 0%, rgba(0,0,0,0.4) 100%);
+            border: 2px solid rgba(255,23,68,0.3);
+            transition: all 0.3s;
+        }
+        
+        .emergency-card:hover {
+            border-color: rgba(255,23,68,0.6);
+            background: rgba(255,23,68,0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(255,23,68,0.3);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- 顶部紧急警示 -->
+    <div class="bg-gradient-to-r from-red-900/40 via-red-600/50 to-red-900/40 border-y border-red-500/30 py-3 px-4">
+        <div class="flex items-center justify-center space-x-4 text-xs">
+            <div class="w-3 h-3 bg-red-500 rounded-full emergency-indicator"></div>
+            <p class="text-red-300 font-orbitron tracking-widest">
+                [ EMERGENCY CHANNEL ] 紧急上报频道已开启 | 所有报告将被优先处理
+            </p>
+            <div class="w-3 h-3 bg-red-500 rounded-full emergency-indicator"></div>
+        </div>
+    </div>
+    
+    <!-- 导航栏 -->
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/60 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <img src="iconic1.png" alt="KABA" class="h-10 w-10 object-contain brightness-110">
+                    <div>
+                        <h1 class="font-orbitron font-black text-sm tracking-widest text-white">
+                            SECURITY REPORT
+                        </h1>
+                        <p class="text-[8px] text-red-400 tracking-wider">异常事件上报系统</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-6 text-sm">
+                    <a href="index.html" class="text-gray-400 hover:text-cyan-400 font-bold">返回首页</a>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                        <span class="text-red-400 font-orbitron text-xs">EMERGENCY</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 主内容 -->
+    <main class="max-w-6xl mx-auto px-6 py-16">
+        
+        <!-- 警告说明 -->
+        <div class="text-center mb-16">
+            <div class="inline-block p-8 bg-red-900/20 border-2 border-red-500/30 mb-8">
+                <svg class="w-16 h-16 text-red-400 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"/>
+                </svg>
+                <h1 class="text-4xl font-black text-white mb-4">
+                    紧急事件上报系统
+                </h1>
+                <p class="text-gray-400 text-lg mb-6">
+                    如您发现大桥异常情况，请立即通过本系统上报
+                </p>
+                <div class="bg-black/50 border border-red-500/30 p-4 text-left">
+                    <p class="text-sm text-red-300 font-bold mb-2">⚠️ 重要提醒：</p>
+                    <ul class="text-sm text-gray-500 space-y-1 pl-4">
+                        <li>• 虚假报警将被追究法律责任（最高 5 年监禁）</li>
+                        <li>• 所有报告均经加密传输至 KABA 指挥中心</li>
+                        <li>• 紧急情况（Level 1-2）将在 3 分钟内响应</li>
+                        <li>• 您的身份信息将被保密（除非涉及刑事调查）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 上报表单 -->
+        <div class="grid lg:grid-cols-3 gap-8 mb-16">
+            
+            <!-- 左侧：表单 -->
+            <div class="lg:col-span-2">
+                <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8">
+                    <h2 class="text-2xl font-black text-white mb-8 border-l-4 border-red-500 pl-4">
+                        填写事件报告
+                    </h2>
+                    
+                    <form id="reportForm" class="space-y-8">
+                        
+                        <!-- 威胁等级选择 -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-400 mb-4 uppercase tracking-widest">
+                                威胁等级评估 *
+                            </label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="threat-level active" data-level="1" onclick="selectThreatLevel(1)">
+                                    <div class="p-6 bg-red-900/30 border-2 border-red-500 text-center">
+                                        <div class="w-12 h-12 bg-red-500 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                            <span class="font-orbitron font-black text-white text-xl">L1</span>
+                                        </div>
+                                        <h3 class="text-red-400 font-bold mb-2">极高威胁</h3>
+                                        <p class="text-xs text-gray-500">恐怖袭击、爆炸、持械威胁</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="threat-level" data-level="2" onclick="selectThreatLevel(2)">
+                                    <div class="p-6 bg-orange-900/30 border-2 border-orange-500 text-center">
+                                        <div class="w-12 h-12 bg-orange-500 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                            <span class="font-orbitron font-black text-white text-xl">L2</span>
+                                        </div>
+                                        <h3 class="text-orange-400 font-bold mb-2">高度威胁</h3>
+                                        <p class="text-xs text-gray-500">结构损坏、可疑人员、火情</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="threat-level" data-level="3" onclick="selectThreatLevel(3)">
+                                    <div class="p-6 bg-yellow-900/30 border-2 border-yellow-500 text-center">
+                                        <div class="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                            <span class="font-orbitron font-black text-white text-xl">L3</span>
+                                        </div>
+                                        <h3 class="text-yellow-400 font-bold mb-2">中度威胁</h3>
+                                        <p class="text-xs text-gray-500">交通事故、设备故障</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="threat-level" data-level="4" onclick="selectThreatLevel(4)">
+                                    <div class="p-6 bg-blue-900/30 border-2 border-blue-500 text-center">
+                                        <div class="w-12 h-12 bg-blue-500 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                            <span class="font-orbitron font-black text-white text-xl">L4</span>
+                                        </div>
+                                        <h3 class="text-blue-400 font-bold mb-2">低度异常</h3>
+                                        <p class="text-xs text-gray-500">噪音、异味、轻微违规</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="threat_level" name="threat_level" value="1" required>
+                        </div>
+                        
+                        <!-- 事件位置 -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">
+                                事件发生位置 *
+                            </label>
+                            <select class="kaba-select" name="location" required>
+                                <option value="">请选择区段</option>
+                                <option value="0-10">0-10 公里（帝国侧入口）</option>
+                                <option value="10-20">10-20 公里</option>
+                                <option value="20-30">20-30 公里</option>
+                                <option value="30-40">30-40 公里</option>
+                                <option value="40-50">40-50 公里</option>
+                                <option value="50-60">50-60 公里（中央管理岛）</option>
+                                <option value="60-70">60-70 公里</option>
+                                <option value="70-80">70-80 公里</option>
+                                <option value="80-90">80-90 公里</option>
+                                <option value="90-100">90-100 公里</option>
+                                <option value="100-111">100-111 公里（AC 侧入口）</option>
+                                <option value="unknown">位置不明</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 事件类型 -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">
+                                事件类型 *
+                            </label>
+                            <select class="kaba-select" name="event_type" required>
+                                <option value="">请选择事件类型</option>
+                                <option value="security">安全威胁（可疑人员、物品）</option>
+                                <option value="structure">结构异常（裂缝、震动、异响）</option>
+                                <option value="traffic">交通事故</option>
+                                <option value="equipment">设备故障</option>
+                                <option value="fire">火情、爆炸</option>
+                                <option value="magic">魔法异常（能量波动、失控）</option>
+                                <option value="violation">违法行为</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 详细描述 -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">
+                                详细描述 *
+                            </label>
+                            <textarea class="kaba-textarea" name="description" placeholder="请详细描述您观察到的情况，包括：时间、地点、涉及人员/车辆数量、现场状况等" required></textarea>
+                        </div>
+                        
+                        <!-- 联系方式 -->
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">
+                                    您的姓名
+                                </label>
+                                <input type="text" class="kaba-input" name="reporter_name" placeholder="可选择匿名">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">
+                                    联系方式
+                                </label>
+                                <input type="text" class="kaba-input" name="contact" placeholder="通讯码或频道（可选）">
+                            </div>
+                        </div>
+                        
+                        <!-- 法律声明 -->
+                        <div class="bg-white/5 border border-white/10 p-6 flex items-start space-x-4">
+                            <input type="checkbox" id="legal_agree" required class="mt-1 w-5 h-5 bg-black border-2 border-cyan-500">
+                            <label for="legal_agree" class="text-sm text-gray-400 leading-relaxed">
+                                我确认以上信息真实准确。我理解虚假报警将承担法律责任，
+                                包括但不限于罚款、监禁及终身禁止入境。我同意 KABA 根据《通行特别法》第 11 条处理本报告。
+                            </label>
+                        </div>
+                        
+                        <!-- 提交按钮 -->
+                        <button type="submit" class="submit-btn w-full">
+                            <span class="relative z-10 font-orbitron">提交紧急报告 SUBMIT</span>
+                        </button>
+                        
+                    </form>
+                </div>
+            </div>
+            
+            <!-- 右侧：紧急联络 -->
+            <div class="space-y-6">
+                
+                <!-- 极端紧急情况 -->
+                <div class="emergency-card p-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
+                        <h3 class="text-lg font-black text-red-400 uppercase">极端紧急</h3>
+                    </div>
+                    <p class="text-sm text-gray-400 mb-6">
+                        生命威胁、恐怖袭击、大规模事故
+                    </p>
+                    <div class="space-y-3">
+                        <div class="bg-black/50 border border-red-500/30 p-4">
+                            <p class="text-xs text-gray-600 mb-1">KABA 应急指挥中心</p>
+                            <p class="text-xl font-orbitron text-red-400 font-black">ALPHA-999</p>
+                        </div>
+                        <div class="bg-black/50 border border-red-500/30 p-4">
+                            <p class="text-xs text-gray-600 mb-1">ISA 反恐热线</p>
+                            <p class="text-xl font-orbitron text-red-400 font-black">SIERRA-001</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 一般异常 -->
+                <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-6">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-4 h-4 bg-cyan-500 rounded-full"></div>
+                        <h3 class="text-lg font-black text-cyan-400 uppercase">常规上报</h3>
+                    </div>
+                    <p class="text-sm text-gray-400 mb-6">
+                        设备故障、轻微违规、咨询建议
+                    </p>
+                    <div class="space-y-3">
+                        <div class="bg-black/50 border border-cyan-500/30 p-4">
+                            <p class="text-xs text-gray-600 mb-1">KABA 运营中心</p>
+                            <p class="text-xl font-orbitron text-cyan-400 font-black">BRAVO-24/7</p>
+                        </div>
+                        <div class="bg-black/50 border border-cyan-500/30 p-4">
+                            <p class="text-xs text-gray-600 mb-1">技术支持</p>
+                            <p class="text-xl font-orbitron text-cyan-400 font-black">CHARLIE-888</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 响应时间 -->
+                <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-6">
+                    <h3 class="text-sm font-bold text-gray-400 mb-4 uppercase tracking-widest">
+                        预计响应时间
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-red-400">Level 1（极高威胁）</span>
+                            <span class="text-white font-orbitron">< 3 分钟</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-orange-400">Level 2（高度威胁）</span>
+                            <span class="text-white font-orbitron">< 10 分钟</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-yellow-400">Level 3（中度威胁）</span>
+                            <span class="text-white font-orbitron">< 30 分钟</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-blue-400">Level 4（低度异常）</span>
+                            <span class="text-white font-orbitron">< 2 小时</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        <!-- 常见问题 -->
+        <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8">
+            <h2 class="text-2xl font-black text-white mb-8">常见问题</h2>
+            
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-cyan-400 font-bold mb-2">Q: 我可以匿名报告吗？</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        A: 可以。但如果事件涉及刑事调查，ISA 有权要求您配合调查。建议在非紧急情况下留下联系方式，便于工作人员核实细节。
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-cyan-400 font-bold mb-2">Q: 虚假报警会有什么后果？</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        A: 根据《通行特别法》第 11 条，恶意虚假报警将被处以 10,000-50,000 金克朗罚款，
+                        严重者可判处 1-5 年监禁并终身禁止入境。
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-cyan-400 font-bold mb-2">Q: 提交报告后会发生什么？</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        A: KABA 指挥中心将立即评估威胁等级。Level 1-2 将启动应急响应，
+                        派遣 ATPD/ISA 人员赶往现场。您可能会收到进度通知（如果留下了联系方式）。
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-cyan-400 font-bold mb-2">Q: 我看到可疑人员但不确定是否威胁，该报告吗？</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        A: 应该报告。"宁可误报，不可漏报"是 KABA 的原则。
+                        只要您真诚地认为存在潜在威胁，即使最终证明是虚惊一场，也不会被追责。
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    </main>
+    
+    <!-- 页脚 -->
+    <footer class="border-t border-white/5 bg-black py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-gray-700 text-xs mb-2">
+                © 2026 K-A Bridge Authority • Security Department
+            </p>
+            <p class="text-gray-800 text-xs">
+                本系统 24/7 在线 • 您的报告将被加密传输至 KABA 指挥中心
+            </p>
+            <p class="text-red-400 text-xs mt-4 font-bold">
+                紧急情况请直接呼叫 ALPHA-999
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        let selectedThreatLevel = 1;
+        
+        // 威胁等级选择
+        function selectThreatLevel(level) {
+            selectedThreatLevel = level;
+            document.getElementById('threat_level').value = level;
+            
+            // 更新 UI
+            document.querySelectorAll('.threat-level').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`.threat-level[data-level="${level}"]`).classList.add('active');
+        }
+        
+        // 表单提交
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 收集表单数据
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            data.threat_level = selectedThreatLevel;
+            data.timestamp = new Date().toISOString();
+            
+            // 模拟提交
+            console.log('提交报告:', data);
+            
+            // 显示确认消息
+            alert(`
+报告已提交至 KABA 指挥中心
+
+报告编号: RPT-${Date.now()}
+威胁等级: Level ${selectedThreatLevel}
+预计响应时间: ${getResponseTime(selectedThreatLevel)}
+
+您将收到确认通知（如已留下联系方式）
+感谢您的警觉与配合！
+            `.trim());
+            
+            // 重置表单
+            this.reset();
+            selectThreatLevel(1);
+        });
+        
+        function getResponseTime(level) {
+            const times = {
+                1: '< 3 分钟',
+                2: '< 10 分钟',
+                3: '< 30 分钟',
+                4: '< 2 小时'
+            };
+            return times[level] || '未知';
+        }
+    </script>
+    
+</body>
+</html>
