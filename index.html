@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KABA | 卡拉斯科-阿提菲克跨海大桥管理局</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --kaba-dark: #0a0e17;
+            --kaba-darker: #050811;
+            --kaba-cyan: #00f2ff;
+            --kaba-gold: #d4af37;
+            --kaba-red: #ff1744;
+            --kaba-border: rgba(255,255,255,0.08);
+        }
+        
+        body {
+            background: var(--kaba-darker);
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .font-orbitron { font-family: 'Orbitron', monospace; }
+        
+        /* 网格背景 */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(0,242,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,242,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            position: relative;
+        }
+        
+        .grid-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, var(--kaba-darker) 100%);
+            pointer-events: none;
+        }
+        
+        /* 扫描线动画 */
+        .scanline {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--kaba-cyan), transparent);
+            animation: scan 8s linear infinite;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        
+        /* 霓虹发光效果 */
+        .neon-text {
+            text-shadow: 
+                0 0 5px var(--kaba-cyan),
+                0 0 10px var(--kaba-cyan),
+                0 0 20px var(--kaba-cyan),
+                0 0 40px var(--kaba-cyan);
+        }
+        
+        .neon-border {
+            box-shadow: 
+                0 0 5px var(--kaba-cyan),
+                0 0 10px var(--kaba-cyan),
+                inset 0 0 5px var(--kaba-cyan);
+        }
+        
+        /* 状态指示器脉冲 */
+        .status-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* 军事化卡片 */
+        .tactical-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.4) 100%);
+            border: 1px solid var(--kaba-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tactical-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,242,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .tactical-card:hover::before {
+            left: 100%;
+        }
+        
+        /* 角落装饰 */
+        .corner-accent {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .corner-accent::before,
+        .corner-accent::after {
+            content: '';
+            position: absolute;
+            background: var(--kaba-cyan);
+        }
+        
+        .corner-accent::before {
+            width: 100%;
+            height: 2px;
+        }
+        
+        .corner-accent::after {
+            width: 2px;
+            height: 100%;
+        }
+        
+        .corner-tl { top: 0; left: 0; }
+        .corner-tr { top: 0; right: 0; transform: rotate(90deg); }
+        .corner-bl { bottom: 0; left: 0; transform: rotate(-90deg); }
+        .corner-br { bottom: 0; right: 0; transform: rotate(180deg); }
+        
+        /* 数据流动画 */
+        @keyframes dataflow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .data-stream {
+            position: absolute;
+            height: 1px;
+            width: 100px;
+            background: linear-gradient(90deg, transparent, var(--kaba-cyan), transparent);
+            animation: dataflow 3s linear infinite;
+        }
+        
+        /* 按钮样式 */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--kaba-cyan) 0%, #0088ff 100%);
+            color: #000;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #fff 0%, var(--kaba-cyan) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+        
+        .btn-primary span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--kaba-border);
+            color: #fff;
+            padding: 1rem 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--kaba-cyan);
+            background: rgba(0,242,255,0.1);
+            box-shadow: 0 0 20px rgba(0,242,255,0.3);
+        }
+        
+        /* 统计数字动画 */
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--kaba-cyan) 0%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .stat-number { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body class="grid-bg">
+    
+    <!-- 顶部警示条 -->
+    <div class="bg-gradient-to-r from-red-900/20 via-red-600/30 to-red-900/20 border-y border-red-500/20 py-2 px-4 overflow-hidden">
+        <div class="flex items-center justify-center space-x-4 text-xs">
+            <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+            <p class="text-red-300 font-orbitron tracking-widest">
+                [ SECURITY LEVEL 4 - NORMAL ] 本站点受 ISA 与帝国联合安全部队监控 | 所有访问记录将被保存
+            </p>
+            <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+        </div>
+    </div>
+    
+    <!-- 导航栏 -->
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/60 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo区域 -->
+                <div class="flex items-center space-x-6">
+                    <img src="iconic1.png" alt="KABA Seal" class="h-14 w-14 object-contain brightness-110">
+                    <div class="hidden lg:block border-l border-white/20 pl-6">
+                        <h1 class="font-orbitron font-black text-xl tracking-[0.3em] text-white">
+                            K-A BRIDGE AUTHORITY
+                        </h1>
+                        <p class="text-[10px] text-cyan-400 tracking-[0.5em] mt-1">
+                            SECURITY • CONNECTIVITY • SOVEREIGNTY
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 导航链接 -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-cyan-400 text-sm font-bold tracking-widest border-b-2 border-cyan-400 pb-1">
+                        首页
+                    </a>
+                    <a href="live_monitor.html" class="text-gray-400 hover:text-cyan-400 text-sm font-bold tracking-widest transition-all">
+                        实时监控
+                    </a>
+                    <a href="schedule.html" class="text-gray-400 hover:text-cyan-400 text-sm font-bold tracking-widest transition-all">
+                        列车时刻
+                    </a>
+                    <a href="weather.html" class="text-gray-400 hover:text-cyan-400 text-sm font-bold tracking-widest transition-all">
+                        天气海况
+                    </a>
+                    <a href="news.html" class="text-gray-400 hover:text-cyan-400 text-sm font-bold tracking-widest transition-all">
+                        新闻中心
+                    </a>
+                    <a href="laws.html" class="text-gray-400 hover:text-cyan-400 text-sm font-bold tracking-widest transition-all">
+                        法律公约
+                    </a>
+                    <a href="about.html" class="text-gray-400 hover:text-cyan-400 text-sm font-bold tracking-widest transition-all">
+                        关于我们
+                    </a>
+                    <a href="archives.html" class="text-gray-400 hover:text-cyan-400 text-sm font-bold tracking-widest transition-all">
+                        历史档案
+                    </a>
+                    <a href="memorial.html" class="text-gray-400 hover:text-red-400 text-sm font-bold tracking-widest transition-all">
+                        822纪念
+                    </a>
+                    <a href="faq.html" class="text-gray-400 hover:text-cyan-400 text-sm font-bold tracking-widest transition-all">
+                        FAQ
+                    </a>
+                    <a href="security_report.html" class="bg-red-500/20 text-red-400 px-3 py-2 text-xs font-bold uppercase tracking-widest border border-red-500/50 hover:bg-red-500/30 transition-all">
+                        紧急报告
+                    </a>
+                </div>
+                
+                <!-- 状态指示器 -->
+                <div class="flex items-center space-x-3">
+                    <div class="hidden sm:block text-right">
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Bridge Status</p>
+                        <p class="text-xs text-cyan-400 font-orbitron">OPERATIONAL</p>
+                    </div>
+                    <div class="w-3 h-3 bg-cyan-400 rounded-full status-pulse"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 英雄区 -->
+    <header class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="scanline"></div>
+        
+        <!-- 背景层 -->
+        <div class="absolute inset-0 z-0">
+            <img src="iconic1.png" class="w-full h-full object-cover opacity-5 blur-sm scale-110" alt="">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/80 to-black"></div>
+        </div>
+        
+        <!-- 内容层 -->
+        <div class="max-w-7xl mx-auto px-6 relative z-10 py-20">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- 左侧文字 -->
+                <div>
+                    <div class="inline-block px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 mb-6">
+                        <p class="text-cyan-400 text-[10px] font-bold tracking-[0.4em] uppercase">
+                            Official Government Portal
+                        </p>
+                    </div>
+                    
+                    <h2 class="text-6xl lg:text-7xl font-black text-white mb-6 leading-tight">
+                        卡拉斯科-阿提菲克<br>
+                        <span class="neon-text font-orbitron">跨海大桥</span><br>
+                        管理局
+                    </h2>
+                    
+                    <p class="text-xl text-gray-400 mb-4 leading-relaxed border-l-4 border-cyan-500 pl-6">
+                        守护 111 公里战略生命线
+                    </p>
+                    
+                    <p class="text-base text-gray-500 mb-10 leading-relaxed pl-6">
+                        KABA 是连接卡拉斯科联合帝国与阿提菲克市的唯一陆上通道管理机构。
+                        我们不仅负责交通运营，更是跨主权安全协调的执行者。
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <button class="btn-primary">
+                            <span>申请通行准入</span>
+                        </button>
+                        <a href="live_monitor.html" class="btn-secondary">
+                            查看实时监控
+                        </a>
+                    </div>
+                    
+                    <!-- 核心数据 -->
+                    <div class="grid grid-cols-3 gap-8 mt-16 pt-12 border-t border-white/10">
+                        <div>
+                            <p class="stat-number font-orbitron">111</p>
+                            <p class="text-xs text-gray-500 uppercase tracking-widest mt-2">公里总长</p>
+                        </div>
+                        <div>
+                            <p class="stat-number font-orbitron">1200</p>
+                            <p class="text-xs text-gray-500 uppercase tracking-widest mt-2">km/h 列车速度</p>
+                        </div>
+                        <div>
+                            <p class="stat-number font-orbitron">3200</p>
+                            <p class="text-xs text-gray-500 uppercase tracking-widest mt-2">管理人员</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 右侧系统监控面板 -->
+                <div class="tactical-card p-8 relative">
+                    <div class="corner-accent corner-tl"></div>
+                    <div class="corner-accent corner-tr"></div>
+                    <div class="corner-accent corner-bl"></div>
+                    <div class="corner-accent corner-br"></div>
+                    
+                    <div class="data-stream top-1/4"></div>
+                    <div class="data-stream top-2/4" style="animation-delay: 1s;"></div>
+                    <div class="data-stream top-3/4" style="animation-delay: 2s;"></div>
+                    
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <p class="text-[10px] font-orbitron tracking-[0.3em] text-gray-500 uppercase">
+                                System Monitor / v2.0.26
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
+                            <p class="text-[10px] text-cyan-400 font-bold">LIVE FEED</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 结构完整度 -->
+                    <div class="mb-8">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm text-gray-400">大桥结构完整度</span>
+                            <span class="text-sm font-orbitron text-cyan-400">99.98%</span>
+                        </div>
+                        <div class="w-full h-2 bg-gray-900 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-cyan-500 to-cyan-300 h-full" style="width: 99.98%; box-shadow: 0 0 10px var(--kaba-cyan);"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 关键指标 -->
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white/5 border border-white/10 p-4">
+                            <p class="text-[10px] text-gray-500 uppercase font-bold mb-2">Traffic Density</p>
+                            <p class="text-3xl font-orbitron text-white">42.5%</p>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 p-4">
+                            <p class="text-[10px] text-gray-500 uppercase font-bold mb-2">Defense Status</p>
+                            <p class="text-3xl font-orbitron text-green-400">ACTIVE</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 系统日志 -->
+                    <div class="bg-black/50 border border-cyan-500/20 p-4 font-mono text-[10px] text-cyan-600 leading-loose">
+                        <p>> EXECUTING PROTOCOL 00...</p>
+                        <p>> ENCRYPTED CHANNEL ESTABLISHED...</p>
+                        <p>> JADCC SYNC: OPERATIONAL</p>
+                        <p>> NO ANOMALIES DETECTED IN SECTOR 7.</p>
+                        <p class="text-cyan-400 mt-2">> STANDBY MODE ACTIVE</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </header>
+    
+    <!-- 核心功能区 -->
+    <section class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <p class="text-cyan-400 text-sm font-bold tracking-[0.4em] uppercase mb-4">Core Functions</p>
+                <h3 class="text-4xl font-black text-white mb-6">战略通道三大职能</h3>
+                <div class="w-20 h-1 bg-gradient-to-r from-cyan-500 to-transparent mx-auto"></div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-1 bg-white/5">
+                
+                <!-- 通行管理 -->
+                <div class="tactical-card p-12 group cursor-pointer hover:bg-white/5 transition-all">
+                    <div class="w-16 h-1 bg-cyan-500 mb-8 transition-all group-hover:w-full"></div>
+                    
+                    <div class="w-16 h-16 bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    
+                    <h4 class="text-xs tracking-[0.5em] text-cyan-500 mb-4 uppercase font-bold">Registry</h4>
+                    <h3 class="text-2xl font-black text-white mb-6">通行准入核验</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-8">
+                        办理 L（民用）、M（商用）及 S（战略级）跨海通行证。
+                        所有申请经由人工岛自动化核验系统与 ISA 背景审查。
+                    </p>
+                    
+                    <div class="flex items-center space-x-2 text-white group-hover:text-cyan-400 transition-all">
+                        <span class="text-[10px] font-bold tracking-widest uppercase">申请准入</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- 防御协调 -->
+                <div class="tactical-card p-12 group cursor-pointer hover:bg-white/5 transition-all border-x border-white/10">
+                    <div class="w-16 h-1 bg-red-500 mb-8 transition-all group-hover:w-full"></div>
+                    
+                    <div class="w-16 h-16 bg-red-500/10 border border-red-500/30 flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    
+                    <h4 class="text-xs tracking-[0.5em] text-red-500 mb-4 uppercase font-bold">Defense</h4>
+                    <h3 class="text-2xl font-black text-white mb-6">联合防御体系</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-8">
+                        与 JADCC 实时联动，协调帝国圣矛系统与 AC 天穹裁决。
+                        执行末段点防御，配备 24 座防空炮与 12 组魔导拦截光束。
+                    </p>
+                    
+                    <div class="flex items-center space-x-2 text-white group-hover:text-red-400 transition-all">
+                        <span class="text-[10px] font-bold tracking-widest uppercase">查看防御状态</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- 应急响应 -->
+                <div class="tactical-card p-12 group cursor-pointer hover:bg-white/5 transition-all">
+                    <div class="w-16 h-1 bg-yellow-500 mb-8 transition-all group-hover:w-full"></div>
+                    
+                    <div class="w-16 h-16 bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    
+                    <h4 class="text-xs tracking-[0.5em] text-yellow-500 mb-4 uppercase font-bold">Emergency</h4>
+                    <h3 class="text-2xl font-black text-white mb-6">四级应急预案</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-8">
+                        从蓝色（设备故障）至红色（战争状态）分级响应。
+                        可在 3 分钟内疏散 5000 人，30 秒内展开局部护盾。
+                    </p>
+                    
+                    <div class="flex items-center space-x-2 text-white group-hover:text-yellow-400 transition-all">
+                        <span class="text-[10px] font-bold tracking-widest uppercase">应急上报通道</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+    <!-- 关键数据展示 -->
+    <section class="py-32 bg-gradient-to-b from-transparent to-black/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- 左侧图片 -->
+                <div class="relative">
+                    <div class="tactical-card p-4">
+                        <img src="iconic1.png" class="w-full h-auto brightness-110" alt="KABA Seal">
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 bg-cyan-500/10 border border-cyan-500/30 p-6 backdrop-blur-xl">
+                        <p class="text-xs text-gray-400 mb-2">822 事件后升级</p>
+                        <p class="text-2xl font-orbitron font-black text-cyan-400">300%</p>
+                        <p class="text-xs text-gray-500 mt-1">防御能力提升</p>
+                    </div>
+                </div>
+                
+                <!-- 右侧统计 -->
+                <div>
+                    <p class="text-cyan-400 text-sm font-bold tracking-[0.4em] uppercase mb-4">By The Numbers</p>
+                    <h3 class="text-4xl font-black text-white mb-12">跨海生命线的守护者</h3>
+                    
+                    <div class="space-y-8">
+                        <div class="border-l-4 border-cyan-500 pl-6">
+                            <p class="text-5xl font-orbitron font-black text-white mb-2">15,000</p>
+                            <p class="text-gray-400">日均通行车辆（人次）</p>
+                        </div>
+                        
+                        <div class="border-l-4 border-cyan-500 pl-6">
+                            <p class="text-5xl font-orbitron font-black text-white mb-2">7 min</p>
+                            <p class="text-gray-400">天门级列车单程用时</p>
+                        </div>
+                        
+                        <div class="border-l-4 border-cyan-500 pl-6">
+                            <p class="text-5xl font-orbitron font-black text-white mb-2">99.98%</p>
+                            <p class="text-gray-400">大桥结构完整度</p>
+                        </div>
+                        
+                        <div class="border-l-4 border-red-500 pl-6">
+                            <p class="text-5xl font-orbitron font-black text-white mb-2">0</p>
+                            <p class="text-gray-400">安全事故（天门之影后）</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+    <!-- 中央管理岛介绍 -->
+    <section class="py-32 bg-gradient-to-b from-black/50 to-transparent relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <img src="iconic1.png" class="w-full h-full object-cover blur-3xl scale-150" alt="">
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <p class="text-cyan-400 text-sm font-bold tracking-[0.4em] uppercase mb-4">Heart of the Bridge</p>
+                <h2 class="text-5xl font-black text-white mb-6">
+                    中央管理岛
+                    <span class="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mt-2">
+                        海神之心 · Poseidon's Core
+                    </span>
+                </h2>
+                <p class="text-gray-400 text-lg max-w-3xl mx-auto">
+                    位于大桥 55.65 公里处的人工岛屿，是 KABA 总部所在地，
+                    也是帝国与 AC 唯一的陆上中立贸易区
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- 左侧：岛屿信息 -->
+                <div class="space-y-8">
+                    <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-12 h-12 bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-black text-white">KABA 总部大楼</h3>
+                        </div>
+                        <p class="text-gray-400 leading-relaxed">
+                            42 层高的管理中心，容纳 KABA 理事会、指挥中心、ISA 驻桥办事处、
+                            帝国与 AC 联合海关。24/7 运作，协调大桥所有事务。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-12 h-12 bg-yellow-500/20 border border-yellow-500/50 flex items-center justify-center" style="background: rgba(212, 175, 55, 0.2); border-color: rgba(212, 175, 55, 0.5);">
+                                <svg class="w-6 h-6" style="color: #d4af37;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-black text-white">中立贸易区</h3>
+                        </div>
+                        <p class="text-gray-400 leading-relaxed">
+                            10 平方公里的免税经济区，提供跨国贸易结算、关税豁免、魔法资产认证服务。
+                            吸引了 200+ 跨国企业设立区域总部。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="w-12 h-12 bg-red-500/20 border border-red-500/50 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-black text-white">防御指挥中心</h3>
+                        </div>
+                        <p class="text-gray-400 leading-relaxed">
+                            与 JADCC 实时联动，协调帝国圣矛系统与 AC 天穹裁决。
+                            配备 24 座防空炮、12 组魔导拦截光束，30 秒内可展开局部护盾。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 右侧：数据展示 -->
+                <div class="space-y-8">
+                    <div class="bg-gradient-to-br from-cyan-900/20 to-black/40 border border-cyan-500/30 p-8">
+                        <h3 class="text-2xl font-black text-cyan-400 mb-8">岛屿核心数据</h3>
+                        
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <p class="text-5xl font-orbitron font-black text-white mb-2">3,200</p>
+                                <p class="text-sm text-gray-500">常驻管理人员</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-5xl font-orbitron font-black text-white mb-2">200+</p>
+                                <p class="text-sm text-gray-500">入驻企业</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-5xl font-orbitron font-black text-white mb-2">24/7</p>
+                                <p class="text-sm text-gray-500">不间断运作</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-5xl font-orbitron font-black text-white mb-2">15K+</p>
+                                <p class="text-sm text-gray-500">日均通行人次</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8">
+                        <h3 class="text-lg font-black text-white mb-6 uppercase tracking-wider">岛上设施</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                                <span class="text-gray-400">KABA 理事会大楼</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                                <span class="text-gray-400">联合海关检查站</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                                <span class="text-gray-400">中立贸易广场</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                                <span class="text-gray-400">ISA 驻桥办事处</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                                <span class="text-gray-400">应急避难设施</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                                <span class="text-gray-400">防御指挥中心</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-yellow-900/20 border border-yellow-500/30 p-6" style="background: rgba(212, 175, 55, 0.1); border-color: rgba(212, 175, 55, 0.3);">
+                        <div class="flex items-start space-x-4">
+                            <svg class="w-6 h-6 flex-shrink-0 mt-1" style="color: #d4af37;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"/>
+                            </svg>
+                            <div>
+                                <p class="font-bold mb-2" style="color: #d4af37;">访客须知</p>
+                                <p class="text-sm text-gray-400">
+                                    中央管理岛属于高度管控区域。所有访客需持有 M 级及以上通行证，
+                                    并在抵达后 24 小时内向 KABA 安全部登记备案。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+    <!-- 通行准入申请 -->
+    <section class="py-32 bg-gradient-to-b from-transparent to-black/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <p class="text-cyan-400 text-sm font-bold tracking-[0.4em] uppercase mb-4">Transit Permit System</p>
+                <h2 class="text-5xl font-black text-white mb-6">通行准入申请</h2>
+                <p class="text-gray-400 text-lg max-w-3xl mx-auto">
+                    跨越两个世界需要获得 KABA 颁发的通行证<br>
+                    选择适合您的等级，开始申请流程
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-8 mb-16">
+                
+                <!-- T-CLASS 旅游签证 -->
+                <div class="bg-gradient-to-br from-green-900/20 to-black/40 border border-green-500/30 p-8 hover:border-green-500 transition-all group cursor-pointer" onclick="scrollToApplyForm('T')">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-green-500/20 border-2 border-green-500 flex items-center justify-center">
+                            <span class="font-orbitron font-black text-3xl text-green-400">T</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-green-400 text-sm font-bold">审批时间</span>
+                            <span class="text-white font-orbitron text-lg">1-3 天</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-black text-white mb-4">旅游签证</h3>
+                    <p class="text-green-400 text-sm mb-6">T-CLASS TOURIST VISA</p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">海神之心人工岛观光</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">有效期最长 3 天</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">含观光巴士 + 导游</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">仅限公开区域</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-6 border-t border-green-500/30">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm text-gray-500">套餐价格</span>
+                            <span class="text-2xl font-orbitron text-white">280 <span class="text-sm">金克朗</span></span>
+                        </div>
+                        <button class="w-full bg-green-500 text-black py-3 font-bold uppercase tracking-widest hover:bg-green-400 transition-all">
+                            立即预订
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- L-CLASS -->
+                <div class="bg-gradient-to-br from-cyan-900/20 to-black/40 border border-cyan-500/30 p-8 hover:border-cyan-500 transition-all group cursor-pointer" onclick="scrollToApplyForm('L')">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center">
+                            <span class="font-orbitron font-black text-3xl text-cyan-400">L</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-cyan-400 text-sm font-bold">审批时间</span>
+                            <span class="text-white font-orbitron text-lg">3-5 天</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-black text-white mb-4">民用通行证</h3>
+                    <p class="text-cyan-400 text-sm mb-6">L-CLASS PERMIT</p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">个人旅行、探亲访友</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">有效期最长 90 天</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">简化审查流程</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-6 border-t border-cyan-500/30">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm text-gray-500">申请费用</span>
+                            <span class="text-2xl font-orbitron text-white">100 <span class="text-sm">金克朗</span></span>
+                        </div>
+                        <button class="w-full bg-cyan-500 text-black py-3 font-bold uppercase tracking-widest hover:bg-cyan-400 transition-all">
+                            立即申请
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- M-CLASS -->
+                <div class="bg-gradient-to-br from-yellow-900/20 to-black/40 border p-8 hover:border-yellow-500 transition-all group cursor-pointer relative" style="border-color: rgba(212, 175, 55, 0.3);" onclick="scrollToApplyForm('M')">
+                    <div class="absolute top-0 right-0 bg-yellow-500 text-black px-3 py-1 text-xs font-bold" style="background: #d4af37;">
+                        推荐
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 border-2 flex items-center justify-center" style="background: rgba(212, 175, 55, 0.2); border-color: #d4af37;">
+                            <span class="font-orbitron font-black text-3xl" style="color: #d4af37;">M</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-bold" style="color: #d4af37;">审批时间</span>
+                            <span class="text-white font-orbitron text-lg">7-14 天</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-black text-white mb-4">商用通行证</h3>
+                    <p class="text-sm mb-6" style="color: #d4af37;">M-CLASS PERMIT</p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" style="color: #d4af37;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">商务洽谈、货物运输</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" style="color: #d4af37;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">可进入中立贸易区</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" style="color: #d4af37;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">年度多次往返</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" style="color: #d4af37;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">ISA 深度背景审查</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-6 border-t" style="border-color: rgba(212, 175, 55, 0.3);">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm text-gray-500">年费</span>
+                            <span class="text-2xl font-orbitron text-white">5,000 <span class="text-sm">金克朗</span></span>
+                        </div>
+                        <button class="w-full text-black py-3 font-bold uppercase tracking-widest hover:brightness-110 transition-all" style="background: #d4af37;">
+                            立即申请
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- S-CLASS -->
+                <div class="bg-gradient-to-br from-red-900/20 to-black/40 border border-red-500/30 p-8 hover:border-red-500 transition-all group cursor-pointer" onclick="scrollToApplyForm('S')">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-red-500/20 border-2 border-red-500 flex items-center justify-center">
+                            <span class="font-orbitron font-black text-3xl text-red-400">S</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-red-400 text-sm font-bold">审批时间</span>
+                            <span class="text-white font-orbitron text-lg">特别审批</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-2xl font-black text-white mb-4">战略级通行证</h3>
+                    <p class="text-red-400 text-sm mb-6">S-CLASS PERMIT</p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">高级官员、外交人员</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">战略物资运输</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">理事会安全委员会批准</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            <span class="text-sm text-gray-400">最高级别安保</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-6 border-t border-red-500/30">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm text-gray-500">申请方式</span>
+                            <span class="text-lg font-orbitron text-white">需官方推荐</span>
+                        </div>
+                        <button class="w-full bg-red-500 text-white py-3 font-bold uppercase tracking-widest hover:bg-red-400 transition-all">
+                            申请咨询
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- 在线申请表单 -->
+            <div id="apply-form-section" class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-12">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-black text-white mb-8 text-center">在线申请表单</h2>
+                    
+                    <form id="permitForm" class="space-y-8">
+                        
+                        <!-- 通行证类型选择 -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">
+                                选择通行证类型 *
+                            </label>
+                            <div class="grid grid-cols-4 gap-4">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="permit_type" value="T" class="hidden peer">
+                                    <div class="border-2 border-white/10 peer-checked:border-green-500 peer-checked:bg-green-500/10 p-4 text-center transition-all">
+                                        <span class="font-orbitron text-2xl text-green-400">T</span>
+                                        <p class="text-xs text-gray-500 mt-2">旅游</p>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="permit_type" value="L" checked class="hidden peer">
+                                    <div class="border-2 border-white/10 peer-checked:border-cyan-500 peer-checked:bg-cyan-500/10 p-4 text-center transition-all">
+                                        <span class="font-orbitron text-2xl text-cyan-400">L</span>
+                                        <p class="text-xs text-gray-500 mt-2">民用</p>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="permit_type" value="M" class="hidden peer">
+                                    <div class="border-2 border-white/10 peer-checked:bg-yellow-500/10 p-4 text-center transition-all" style="border-color: rgba(255,255,255,0.1);" class="peer-checked:border-[#d4af37]">
+                                        <span class="font-orbitron text-2xl" style="color: #d4af37;">M</span>
+                                        <p class="text-xs text-gray-500 mt-2">商用</p>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="permit_type" value="S" class="hidden peer">
+                                    <div class="border-2 border-white/10 peer-checked:border-red-500 peer-checked:bg-red-500/10 p-4 text-center transition-all">
+                                        <span class="font-orbitron text-2xl text-red-400">S</span>
+                                        <p class="text-xs text-gray-500 mt-2">战略</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- 个人信息 -->
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">
+                                    申请人姓名 *
+                                </label>
+                                <input type="text" class="kaba-input" required placeholder="实名全称">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">
+                                    身份识别码 *
+                                </label>
+                                <input type="text" class="kaba-input font-mono" required placeholder="ID-XXXX-XXXX">
+                            </div>
+                        </div>
+                        
+                        <!-- 所属机构 -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">
+                                所属国家/地区 *
+                            </label>
+                            <select class="kaba-input" required>
+                                <option value="">请选择</option>
+                                <option value="empire">卡拉斯科联合帝国</option>
+                                <option value="ac">阿提菲克科技之都</option>
+                                <option value="neutral">中立区域</option>
+                                <option value="other">其他国家</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 通行目的 -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">
+                                通行目的 *
+                            </label>
+                            <textarea class="kaba-input h-32" required placeholder="请详细说明您的通行目的、预计停留时长等信息"></textarea>
+                        </div>
+                        
+                        <!-- 法律声明 -->
+                        <div class="bg-white/5 border border-white/10 p-6 flex items-start space-x-4">
+                            <input type="checkbox" id="permit_legal" required class="mt-1 w-5 h-5 bg-black border-2 border-cyan-500">
+                            <label for="permit_legal" class="text-sm text-gray-400 leading-relaxed">
+                                我已阅读并同意《通行特别法》的所有条款。我承诺遵守 KABA 的一切规定，
+                                理解虚假申请将导致法律责任并被永久禁止入境。
+                            </label>
+                        </div>
+                        
+                        <!-- 提交按钮 -->
+                        <button type="submit" class="btn-primary w-full">
+                            <span>提交申请 SUBMIT APPLICATION</span>
+                        </button>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 旅行宣传 -->
+    <section class="py-32 bg-gradient-to-b from-black/50 to-transparent relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 via-transparent to-cyan-500 animate-pulse"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <p class="text-cyan-400 text-sm font-bold tracking-[0.4em] uppercase mb-4">Experience The Journey</p>
+                <h2 class="text-5xl font-black text-white mb-6">
+                    七分钟跨越两个世界
+                </h2>
+                <p class="text-gray-400 text-lg max-w-3xl mx-auto">
+                    搭乘天门级超高速列车，以 1200 km/h 的速度穿越 111 公里跨海通道<br>
+                    从帝国的古老荣耀，到魔导之都的未来科技
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-8 mb-16">
+                
+                <!-- 天门级列车 -->
+                <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8 hover:border-cyan-500 transition-all group">
+                    <div class="w-16 h-16 bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-4">天门级列车</h3>
+                    <p class="text-gray-400 mb-6">
+                        半真空魔导磁悬浮技术，巡航速度 1200 km/h。
+                        惯性抑制场让加速如同坐电梯，7 分钟舒适抵达。
+                    </p>
+                    <div class="flex items-center space-x-4 text-sm">
+                        <div>
+                            <p class="text-gray-600">单程用时</p>
+                            <p class="text-cyan-400 font-orbitron font-black text-lg">7 min</p>
+                        </div>
+                        <div class="w-px h-8 bg-white/10"></div>
+                        <div>
+                            <p class="text-gray-600">巡航速度</p>
+                            <p class="text-cyan-400 font-orbitron font-black text-lg">1200 km/h</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 观景体验 -->
+                <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8 hover:border-cyan-500 transition-all group">
+                    <div class="w-16 h-16 bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-4">壮丽海景</h3>
+                    <p class="text-gray-400 mb-6">
+                        途经中央管理岛"海神之心"，俯瞰两面环海的绝美景观。
+                        晴日可见帝国与 AC 的天际线同框。
+                    </p>
+                    <div class="text-sm text-gray-600">
+                        <p>• 观光层 360° 全景廊道</p>
+                        <p>• 每 10 公里设观景台</p>
+                    </div>
+                </div>
+                
+                <!-- 安全保障 -->
+                <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8 hover:border-cyan-500 transition-all group">
+                    <div class="w-16 h-16 bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-4">顶级防护</h3>
+                    <p class="text-gray-400 mb-6">
+                        JADCC 三层联合防空体系实时守护。
+                        天门之影事件后，大桥防御能力提升 300%。
+                    </p>
+                    <div class="text-sm text-gray-600">
+                        <p>• 零事故记录（822 事件后）</p>
+                        <p>• 24/7 监控与快速响应</p>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="text-center">
+                <a href="#apply-form-section" class="btn-primary inline-block">
+                    <span>立即预订您的跨海之旅</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 底部 CTA -->
+    <section class="py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-cyan-900/20 via-transparent to-cyan-900/20"></div>
+        
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <h3 class="text-5xl font-black text-white mb-8">
+                准备好跨越两个世界？
+            </h3>
+            <p class="text-xl text-gray-400 mb-12">
+                申请通行准入，或查看实时大桥运营数据
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-6">
+                <a href="#apply-form-section" class="btn-primary">
+                    <span>立即申请通行证</span>
+                </a>
+                <a href="live_monitor.html" class="btn-secondary">
+                    进入监控中心
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer class="border-t border-white/5 bg-black py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                
+                <!-- 左侧 Logo -->
+                <div>
+                    <img src="iconic1.png" class="h-16 w-16 mb-6 opacity-70" alt="KABA">
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        卡拉斯科-阿提菲克跨海大桥管理局
+                    </p>
+                    <p class="text-gray-700 text-xs mt-4">
+                        守护 111 公里战略通道<br>
+                        连接帝国与魔导之都
+                    </p>
+                </div>
+                
+                <!-- 中间链接 -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-sm">快速访问</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="live_monitor.html" class="text-gray-500 hover:text-cyan-400 transition-all">实时监控中心</a></li>
+                        <li><a href="laws.html" class="text-gray-500 hover:text-cyan-400 transition-all">通行特别法</a></li>
+                        <li><a href="security_report.html" class="text-gray-500 hover:text-cyan-400 transition-all">异常事件上报</a></li>
+                        <li><a href="#" class="text-gray-500 hover:text-cyan-400 transition-all">人员招聘</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 右侧联系 -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-sm">应急联络</h4>
+                    <div class="space-y-4 text-sm">
+                        <div>
+                            <p class="text-gray-600 text-xs mb-1">总部通讯频道</p>
+                            <p class="text-cyan-400 font-orbitron">KABA-CENTRAL-001</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 text-xs mb-1">紧急上报热线</p>
+                            <p class="text-red-400 font-orbitron">ALPHA-999-EMERGENCY</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- 底部版权 -->
+            <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-xs text-gray-700">
+                <p class="mb-4 md:mb-0">
+                    © 2026 K-A Bridge Authority. All Rights Reserved.
+                </p>
+                <p class="font-orbitron italic">
+                    Pons Mundi, Custos Viæ
+                </p>
+            </div>
+        </div>
+    </footer>
+    </style>
+</head>
+<body class="grid-bg">
+    
+    <script>
+        // 平滑滚动到申请表单
+        function scrollToApplyForm(type) {
+            const form = document.getElementById('apply-form-section');
+            if (form) {
+                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // 选中对应的通行证类型
+                setTimeout(() => {
+                    const radio = document.querySelector(`input[name="permit_type"][value="${type}"]`);
+                    if (radio) radio.checked = true;
+                }, 500);
+            }
+        }
+        
+        // 表单提交处理
+        document.addEventListener('DOMContentLoaded', function() {
+            const permitForm = document.getElementById('permitForm');
+            if (permitForm) {
+                permitForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData);
+                    
+                    // 生成申请编号
+                    const appId = 'KABA-' + Date.now().toString(36).toUpperCase();
+                    
+                    // 显示确认消息
+                    alert(`
+✓ 申请已提交至 KABA 审核系统
+
+申请编号: ${appId}
+通行证类型: ${data.permit_type}-CLASS
+预计审批时间: ${getApprovalTime(data.permit_type)}
+
+您将收到电子邮件确认（请检查您的通讯频道）
+感谢您选择 K-A 大桥！
+                    `.trim());
+                    
+                    // 重置表单
+                    this.reset();
+                });
+            }
+        });
+        
+        function getApprovalTime(type) {
+            const times = {
+                'T': '1-3 个工作日（旅游套餐含观光巴士）',
+                'L': '3-5 个工作日',
+                'M': '7-14 个工作日',
+                'S': '需特别审批，时间视情况而定'
+            };
+            return times[type] || '未知';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史档案馆 | KABA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --kaba-dark: #0a0e17;
+            --kaba-darker: #050811;
+            --kaba-cyan: #00f2ff;
+            --kaba-gold: #d4af37;
+            --kaba-red: #ff1744;
+        }
+        
+        body {
+            background: var(--kaba-darker);
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        
+        .font-orbitron { font-family: 'Orbitron', monospace; }
+        
+        /* 时间线样式 */
+        .timeline-item {
+            position: relative;
+            padding-left: 3rem;
+            padding-bottom: 3rem;
+            border-left: 2px solid rgba(255,255,255,0.1);
+        }
+        
+        .timeline-item:last-child {
+            border-left: 2px solid transparent;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -9px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--kaba-cyan);
+            border: 3px solid var(--kaba-darker);
+            box-shadow: 0 0 15px var(--kaba-cyan);
+        }
+        
+        .timeline-dot.red {
+            background: var(--kaba-red);
+            box-shadow: 0 0 15px var(--kaba-red);
+        }
+        
+        /* 档案卡片 */
+        .archive-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.4) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s;
+        }
+        
+        .archive-card:hover {
+            border-color: var(--kaba-cyan);
+            background: rgba(255,255,255,0.05);
+            transform: translateY(-4px);
+        }
+        
+        /* 解密标签 */
+        .classified-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            border-radius: 2px;
+        }
+        
+        .level-1 { background: #4ade80; color: #000; }
+        .level-2 { background: #fbbf24; color: #000; }
+        .level-3 { background: #f97316; color: #fff; }
+        .level-4 { background: #ef4444; color: #fff; }
+        .level-5 { background: #7c3aed; color: #fff; }
+        
+        /* 统计数字 */
+        .stat-box {
+            background: linear-gradient(135deg, rgba(0,242,255,0.1) 0%, rgba(0,0,0,0.4) 100%);
+            border-left: 4px solid var(--kaba-cyan);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- 顶部警示 -->
+    <div class="bg-gradient-to-r from-purple-900/20 via-purple-600/30 to-purple-900/20 border-y border-purple-500/20 py-2 px-4">
+        <div class="flex items-center justify-center space-x-4 text-xs">
+            <svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"/>
+            </svg>
+            <p class="text-purple-300 font-orbitron tracking-widest">
+                [ ARCHIVES ] 部分档案需要相应权限等级查看 | 解密文件受《保密法》保护
+            </p>
+            <svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"/>
+            </svg>
+        </div>
+    </div>
+    
+    <!-- 导航栏 -->
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/60 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <img src="iconic1.png" alt="KABA" class="h-10 w-10 object-contain brightness-110">
+                    <div>
+                        <h1 class="font-orbitron font-black text-sm tracking-widest text-white">
+                            ARCHIVES
+                        </h1>
+                        <p class="text-[8px] text-purple-400 tracking-wider">历史档案馆</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-6 text-sm">
+                    <a href="index.html" class="text-gray-400 hover:text-cyan-400 font-bold">返回首页</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 主内容 -->
+    <main class="max-w-7xl mx-auto px-6 py-16">
+        
+        <!-- 页头 -->
+        <div class="text-center mb-20">
+            <div class="inline-block mb-6">
+                <img src="iconic1.png" class="h-20 w-20 object-contain opacity-50" alt="Archive Seal">
+            </div>
+            <h1 class="text-5xl font-black text-white mb-4">
+                KABA 历史档案馆
+            </h1>
+            <p class="text-gray-500 text-sm mb-8">
+                K-A BRIDGE HISTORICAL ARCHIVES
+            </p>
+            <div class="flex items-center justify-center space-x-8 text-xs">
+                <div>
+                    <p class="text-gray-600">档案总数</p>
+                    <p class="text-white font-orbitron font-black text-lg">2,847</p>
+                </div>
+                <div class="w-px h-8 bg-white/10"></div>
+                <div>
+                    <p class="text-gray-600">公开档案</p>
+                    <p class="text-cyan-400 font-orbitron font-black text-lg">1,203</p>
+                </div>
+                <div class="w-px h-8 bg-white/10"></div>
+                <div>
+                    <p class="text-gray-600">解密档案</p>
+                    <p class="text-yellow-400 font-orbitron font-black text-lg">892</p>
+                </div>
+                <div class="w-px h-8 bg-white/10"></div>
+                <div>
+                    <p class="text-gray-600">机密档案</p>
+                    <p class="text-red-400 font-orbitron font-black text-lg">752</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 822事件专区 -->
+        <section class="mb-20">
+            <div class="bg-gradient-to-r from-red-900/30 via-red-600/20 to-red-900/30 border-2 border-red-500/30 p-12 mb-12">
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="w-16 h-16 bg-red-500/20 border-2 border-red-500 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-black text-white">822 事件完整档案</h2>
+                        <p class="text-red-400 text-sm mt-2">西元 1748 年 8 月 22 日 | 解密等级：LV.5 → LV.2（部分公开）</p>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="stat-box p-6">
+                        <p class="text-sm text-gray-500 mb-2">官方公布伤亡</p>
+                        <p class="text-4xl font-orbitron font-black text-white mb-1">268</p>
+                        <p class="text-xs text-gray-600">死亡 | 526 人受伤</p>
+                    </div>
+                    <div class="stat-box p-6">
+                        <p class="text-sm text-gray-500 mb-2">真实数据（解密）</p>
+                        <p class="text-4xl font-orbitron font-black text-red-400 mb-1">362</p>
+                        <p class="text-xs text-gray-600">死亡 | 711 人受伤</p>
+                    </div>
+                    <div class="stat-box p-6">
+                        <p class="text-sm text-gray-500 mb-2">事件响应时间</p>
+                        <p class="text-4xl font-orbitron font-black text-cyan-400 mb-1">43</p>
+                        <p class="text-xs text-gray-600">分钟（从发射到完全控制）</p>
+                    </div>
+                </div>
+                
+                <div class="bg-black/50 border border-red-500/30 p-8">
+                    <h3 class="text-xl font-black text-white mb-6">关键时刻</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="font-orbitron text-red-400 font-black text-sm w-20 flex-shrink-0">22:42:34</div>
+                            <div class="flex-1">
+                                <p class="text-white font-bold mb-1">天空之剑失控</p>
+                                <p class="text-sm text-gray-400">卧底 Aquck Switc 控制系统，向第四区发射 95 发炮弹</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="font-orbitron text-yellow-400 font-black text-sm w-20 flex-shrink-0">22:55:00</div>
+                            <div class="flex-1">
+                                <p class="text-white font-bold mb-1">全面强攻开始</p>
+                                <p class="text-sm text-gray-400">AIAMT、ISA、MT-2S坦克抵达，启动收复行动</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="font-orbitron text-cyan-400 font-black text-sm w-20 flex-shrink-0">23:21:00</div>
+                            <div class="flex-1">
+                                <p class="text-white font-bold mb-1">梅巴尔·雷击毙</p>
+                                <p class="text-sm text-gray-400">地狱犬副指挥被 MT-2S 机枪击毙，防线崩溃</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="font-orbitron text-green-400 font-black text-sm w-20 flex-shrink-0">23:25:00</div>
+                            <div class="flex-1">
+                                <p class="text-white font-bold mb-1">完全控制</p>
+                                <p class="text-sm text-gray-400">管理中心收复，8 人被俘，Aquck Switc 等 6 人通过水下通道逃脱</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 flex justify-center">
+                    <button onclick="alert('完整档案需要 LV.4 及以上权限\n\n请联系 KABA 档案部申请访问权限\n档案编号: INC-1748-0822-FINAL')" class="bg-red-500 text-white px-8 py-3 font-bold uppercase tracking-widest hover:bg-red-400 transition-all">
+                        查看完整档案
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 大桥建设历程（继续在下一个文件...） -->
+        
+    </main>
+    
+    <footer class="border-t border-white/5 bg-black py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-gray-700 text-xs">
+                © 2026 K-A Bridge Authority • Historical Archives Department
+            </p>
+        </div>
+    </footer>
+    
+</body>
+</html>

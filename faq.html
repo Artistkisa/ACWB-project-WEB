@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常见问题 | KABA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #050811;
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .font-orbitron { font-family: 'Orbitron', monospace; }
+        
+        .faq-item {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .faq-question {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .faq-question:hover {
+            background: rgba(0,242,255,0.05);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .faq-answer.active {
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/60 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <img src="iconic1.png" alt="KABA" class="h-10 w-10 object-contain brightness-110">
+                    <div>
+                        <h1 class="font-orbitron font-black text-sm tracking-widest text-white">FAQ</h1>
+                        <p class="text-[8px] text-cyan-400 tracking-wider">常见问题</p>
+                    </div>
+                </div>
+                <a href="index.html" class="text-gray-400 hover:text-cyan-400 font-bold text-sm">返回首页</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="max-w-4xl mx-auto px-6 py-16">
+        
+        <div class="text-center mb-20">
+            <h1 class="text-5xl font-black text-white mb-4">常见问题</h1>
+            <p class="text-gray-500 text-sm mb-8">FREQUENTLY ASKED QUESTIONS</p>
+            <p class="text-gray-400">找不到答案？联系我们：support@kaba.int</p>
+        </div>
+        
+        <!-- 关于通行证 -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-black text-cyan-400 mb-8">关于通行证</h2>
+            
+            <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10">
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">我该申请哪种通行证？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed">
+                            <p class="mb-4"><strong class="text-white">根据您的目的选择：</strong></p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• <strong class="text-green-400">T-CLASS</strong>: 仅参观海神之心人工岛（最长3天）</li>
+                                <li>• <strong class="text-cyan-400">L-CLASS</strong>: 探亲访友、个人旅行（最长90天）</li>
+                                <li>• <strong class="text-yellow-400" style="color: #d4af37;">M-CLASS</strong>: 商务洽谈、货物运输、年度多次往返</li>
+                                <li>• <strong class="text-red-400">S-CLASS</strong>: 高级官员、战略物资（需官方推荐）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">申请被拒绝了怎么办？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed">
+                            <p class="mb-4">拒绝原因通常包括：</p>
+                            <ul class="space-y-2 text-sm mb-4">
+                                <li>• 犯罪记录或安全威胁</li>
+                                <li>• 资料不完整或虚假</li>
+                                <li>• 不符合申请类型要求</li>
+                            </ul>
+                            <p class="text-sm"><strong class="text-cyan-400">可以申诉</strong>：在收到拒绝通知后 30 天内向 KABA 审查委员会提交申诉，附上补充材料。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">可以加急办理吗？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed">
+                            <p class="mb-4"><strong class="text-cyan-400">可以，但需额外费用：</strong></p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• <strong>T/L-CLASS</strong>: +200 金克朗，1个工作日出证</li>
+                                <li>• <strong>M-CLASS</strong>: +500 金克朗，3个工作日</li>
+                                <li>• <strong>S-CLASS</strong>: 不支持加急</li>
+                            </ul>
+                            <p class="text-xs text-gray-600 mt-4">注意：加急不保证通过，仅加速审批流程。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">通行证丢失怎么办？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed text-sm">
+                            <p class="mb-4"><strong class="text-white">立即报告：</strong></p>
+                            <ol class="space-y-2 list-decimal list-inside mb-4">
+                                <li>拨打 KABA 24小时热线：<strong class="text-cyan-400">1-800-KABA-HELP</strong></li>
+                                <li>前往最近的 KABA 服务点挂失</li>
+                                <li>填写补发申请（需提供身份证明）</li>
+                                <li>补发费用：50 金克朗，3个工作日</li>
+                            </ol>
+                            <p class="text-red-400">⚠️ 丢失期间禁止通行，原证件自动作废。</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- 关于大桥 -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-black text-cyan-400 mb-8">关于大桥</h2>
+            
+            <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10">
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">大桥安全吗？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed">
+                            <p class="mb-4"><strong class="text-green-400">极其安全。</strong>大桥采用多层安全保障：</p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• <strong>结构监测</strong>: 实时监控桥梁健康，99.98% 结构完整性</li>
+                                <li>• <strong>防御系统</strong>: JADCC 十字架系统 24/7 守护</li>
+                                <li>• <strong>应急响应</strong>: 最快 3 分钟到达任何事故点</li>
+                                <li>• <strong>零事故记录</strong>: 822 事件后，无重大安全事故</li>
+                            </ul>
+                            <p class="text-xs text-gray-600 mt-4">天门之影事件（1758）成功拦截导弹，证明防御体系有效性。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">遇到紧急情况怎么办？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed">
+                            <p class="mb-4"><strong class="text-white">紧急联系方式：</strong></p>
+                            <ul class="space-y-2 text-sm mb-4">
+                                <li>• <strong class="text-red-400">ALPHA-999</strong>: 极端紧急（恐怖袭击、大规模伤亡）</li>
+                                <li>• <strong class="text-orange-400">BETA-888</strong>: 一般紧急（事故、火灾、医疗）</li>
+                                <li>• <strong class="text-cyan-400">1-800-KABA-HELP</strong>: 非紧急咨询</li>
+                            </ul>
+                            <p class="text-sm">列车上有紧急呼叫按钮，车站每 500 米有应急电话。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">可以在大桥上拍照吗？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed">
+                            <p class="mb-4"><strong class="text-cyan-400">可以，但有限制：</strong></p>
+                            <ul class="space-y-2 text-sm mb-4">
+                                <li>✓ 观光层、公共区域可自由拍照</li>
+                                <li>✓ 列车内可拍摄窗外风景</li>
+                                <li>✗ 禁止拍摄安检设备、防御系统</li>
+                                <li>✗ 禁止拍摄 KABA 总部内部</li>
+                                <li>✗ 禁止使用无人机</li>
+                            </ul>
+                            <p class="text-xs text-red-400">违规拍摄可能被没收设备并处以罚款。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">恶劣天气会停运吗？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed text-sm">
+                            <p class="mb-4"><strong class="text-white">一般不会，但会限速：</strong></p>
+                            <ul class="space-y-2">
+                                <li>• <strong>6级以下风力</strong>: 正常运行</li>
+                                <li>• <strong>6-8级风力</strong>: 限速至 800 km/h</li>
+                                <li>• <strong>8级以上或台风</strong>: 暂停运营，启动避难协议</li>
+                                <li>• <strong>雷暴</strong>: 魔法护盾启动，正常运行</li>
+                            </ul>
+                            <p class="text-xs text-gray-600 mt-4">大桥可抵御 12 级台风，历史上仅因 822 事件停运过。</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- 关于中央管理岛 -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-black text-cyan-400 mb-8">关于中央管理岛</h2>
+            
+            <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10">
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">普通游客能去海神之心吗？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed">
+                            <p class="mb-4"><strong class="text-green-400">可以！</strong>申请 T-CLASS 旅游签证：</p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• <strong>费用</strong>: 280 金克朗（含观光巴士+导游）</li>
+                                <li>• <strong>有效期</strong>: 最长 3 天</li>
+                                <li>• <strong>可参观</strong>: 贸易广场、观景台、纪念公园</li>
+                                <li>• <strong>不可进入</strong>: KABA 总部、ISA 办事处、防御中心</li>
+                            </ul>
+                            <p class="text-xs text-gray-600 mt-4">需在抵达后 24 小时内向 KABA 安全部登记备案。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">岛上有什么？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed">
+                            <p class="mb-4"><strong class="text-white">核心设施：</strong></p>
+                            <ul class="space-y-2 text-sm mb-4">
+                                <li>• <strong>KABA 总部大楼</strong>（42 层，3200 名员工）</li>
+                                <li>• <strong>中立贸易区</strong>（200+ 跨国企业）</li>
+                                <li>• <strong>联合海关</strong>（帝国+AC 联合运作）</li>
+                                <li>• <strong>防御指挥中心</strong>（与 JADCC 联动）</li>
+                                <li>• <strong>应急避难设施</strong>（可容纳 5 万人）</li>
+                            </ul>
+                            <p class="text-xs text-cyan-400">游客可参观部分区域，核心区域需 M 级及以上通行证。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">可以在岛上过夜吗？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed text-sm">
+                            <p class="mb-4"><strong class="text-cyan-400">可以，岛上有酒店：</strong></p>
+                            <ul class="space-y-2 mb-4">
+                                <li>• <strong>海神之冠大酒店</strong>（五星级，800-2000 金克朗/晚）</li>
+                                <li>• <strong>中立区商旅酒店</strong>（四星，400-800 金克朗/晚）</li>
+                                <li>• <strong>KABA 员工公寓</strong>（仅限 M/S 级通行证持有者）</li>
+                            </ul>
+                            <p class="text-xs text-gray-600">T-CLASS 持有者可住宿，但不得离开指定区域。</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- 其他问题 -->
+        <section>
+            <h2 class="text-2xl font-black text-cyan-400 mb-8">其他问题</h2>
+            
+            <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10">
+                
+                <div class="faq-item">
+                    <div class="faq-question p-6 flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <h3 class="text-lg font-bold text-white">KABA 和 ATPD 有什么区别？</h3>
+                        <svg class="w-6 h-6 text-cyan-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="faq-answer px-6 pb-6">
+                        <div class="text-gray-400 leading-relaxed text-sm">
+                            <ul class="space-y-3">
+                                <li>
+                                    <strong class="text-cyan-400">KABA</strong>：K-A 大桥管理局，负责<strong>整个大桥</strong>的运营、安保、维护。
+                                    是帝国与 AC 共同设立的<strong>准军事化组织</strong>，在大桥上拥有独立执法权。
+                                </li>
+                                <li>
+                                    <strong class="text-blue-400">ATPD</strong>：阿提菲克市警局，是 AC 的<strong>地方执法机构</strong>。
+                                    在大桥上，ATPD 协助 KABA 处理重大刑事案件，但不负责日常管理。
+                                </li>
+                            </ul>
+                            <p class="mt-4 text-gray-600">简单说：大桥归 KABA 管，AC 城区归 ATPD 管。</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+        
+    </main>
+    
+    <footer class="border-t border-white/5 bg-black py-12 mt-20">
+        <div class="text-center">
+            <p class="text-gray-700 text-xs mb-2">© 2026 KABA • Customer Support</p>
+            <p class="text-gray-800 text-xs">找不到答案？发送邮件至 support@kaba.int</p>
+        </div>
+    </footer>
+    
+    <script>
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('svg');
+            
+            // 关闭其他所有FAQ
+            document.querySelectorAll('.faq-answer').forEach(a => {
+                if (a !== answer) {
+                    a.classList.remove('active');
+                }
+            });
+            document.querySelectorAll('.faq-question svg').forEach(i => {
+                if (i !== icon) {
+                    i.style.transform = 'rotate(0deg)';
+                }
+            });
+            
+            // 切换当前FAQ
+            answer.classList.toggle('active');
+            if (answer.classList.contains('active')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻中心 | KABA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #050811;
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .font-orbitron { font-family: 'Orbitron', monospace; }
+        
+        .news-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        
+        .news-card:hover {
+            border-color: #00f2ff;
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            border-radius: 2px;
+        }
+        
+        .badge-urgent { background: #ff1744; color: #fff; }
+        .badge-important { background: #fbbf24; color: #000; }
+        .badge-info { background: #3b82f6; color: #fff; }
+        .badge-success { background: #4ade80; color: #000; }
+    </style>
+</head>
+<body>
+    
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/60 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <img src="iconic1.png" alt="KABA" class="h-10 w-10 object-contain brightness-110">
+                    <div>
+                        <h1 class="font-orbitron font-black text-sm tracking-widest text-white">NEWS CENTER</h1>
+                        <p class="text-[8px] text-cyan-400 tracking-wider">新闻中心</p>
+                    </div>
+                </div>
+                <a href="index.html" class="text-gray-400 hover:text-cyan-400 font-bold text-sm">返回首页</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="max-w-7xl mx-auto px-6 py-16">
+        
+        <div class="text-center mb-20">
+            <h1 class="text-5xl font-black text-white mb-4">KABA 新闻中心</h1>
+            <p class="text-gray-500 text-sm mb-8">K-A BRIDGE AUTHORITY NEWS</p>
+            <div class="flex items-center justify-center space-x-8 text-sm">
+                <div>
+                    <p class="text-gray-600">最新更新</p>
+                    <p class="text-cyan-400 font-orbitron text-lg">2026-02-07</p>
+                </div>
+                <div class="w-px h-8 bg-white/10"></div>
+                <div>
+                    <p class="text-gray-600">本月公告</p>
+                    <p class="text-white font-orbitron text-lg">12</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 紧急公告 -->
+        <section class="mb-16">
+            <div class="flex items-center mb-8">
+                <div class="w-2 h-8 bg-gradient-to-b from-red-400 to-transparent mr-4"></div>
+                <h2 class="text-2xl font-black text-white">紧急公告</h2>
+            </div>
+            
+            <div class="space-y-6">
+                
+                <div class="news-card p-8 border-red-500/30">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="badge badge-urgent mb-3">紧急</span>
+                            <h3 class="text-2xl font-black text-white mb-2">第七桥段临时维护通知</h3>
+                            <p class="text-gray-600 text-sm">发布时间：2026-02-07 14:30 | 发布机构：KABA 运营管理部</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        因第七桥段（KM 63-70）结构例行检修需要，将于 <strong class="text-red-400">2026年2月10日 02:00 - 06:00</strong> 
+                        实施临时速度限制。期间天门级列车限速至 600 km/h，单程用时延长至约 12 分钟。
+                    </p>
+                    <div class="bg-red-900/20 border border-red-500/30 p-4">
+                        <p class="text-sm text-red-300">
+                            ⚠️ 请提前规划行程，建议避开维护时段出行。通行证持有者无需额外申请。
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- 官方公告 -->
+        <section class="mb-16">
+            <div class="flex items-center mb-8">
+                <div class="w-2 h-8 bg-gradient-to-b from-cyan-400 to-transparent mr-4"></div>
+                <h2 class="text-2xl font-black text-white">官方公告</h2>
+            </div>
+            
+            <div class="space-y-6">
+                
+                <div class="news-card p-8">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="badge badge-success mb-3">重要</span>
+                            <h3 class="text-xl font-black text-white mb-2">耀阳新站重建工程竣工（AC 第四区）</h3>
+                            <p class="text-gray-600 text-sm">发布时间：2026-02-05 10:00 | 来源：AC 城市建设部 / KABA 转发</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        <strong class="text-cyan-400">【AC 官方消息】</strong>
+                        历时 8 年的阿提菲克第四区耀阳新站重建工程已正式竣工并投入使用。
+                        新站采用最新的抗爆结构设计，配备三层防护系统。
+                        车站还设立了 <strong class="text-cyan-400">822 事件纪念厅</strong>，永久陈列遇难者名单。
+                    </p>
+                    <div class="grid grid-cols-3 gap-4 text-sm mb-4">
+                        <div class="bg-black/50 border border-white/10 p-4">
+                            <p class="text-cyan-400 font-orbitron text-2xl mb-1">8</p>
+                            <p class="text-gray-600">年建设周期</p>
+                        </div>
+                        <div class="bg-black/50 border border-white/10 p-4">
+                            <p class="text-cyan-400 font-orbitron text-2xl mb-1">42亿</p>
+                            <p class="text-gray-600">金克朗投资</p>
+                        </div>
+                        <div class="bg-black/50 border border-white/10 p-4">
+                            <p class="text-cyan-400 font-orbitron text-2xl mb-1">3层</p>
+                            <p class="text-gray-600">防护系统</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-600">
+                        <em>注：耀阳站位于 AC 第四区，归 AC 城市建设部管辖。</em>
+                    </p>
+                </div>
+                
+                <div class="news-card p-8">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="badge badge-important mb-3">重要</span>
+                            <h3 class="text-xl font-black text-white mb-2">KABA 理事会关于加强安保措施的通告</h3>
+                            <p class="text-gray-600 text-sm">发布时间：2026-01-20 09:00 | 发布机构：KABA 理事会</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        鉴于近期国际安全形势变化，KABA 理事会决定自 2026 年 2 月 1 日起实施以下加强安保措施：
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-400 mb-4">
+                        <li>• M 级通行证申请审批时间延长至 14-21 个工作日</li>
+                        <li>• 所有通行者需在大桥入口进行魔法残留检测</li>
+                        <li>• 中央管理岛访客需提前 48 小时向 KABA 安全部备案</li>
+                        <li>• 各桥段巡逻频次提升 30%，新增 200 名安保人员</li>
+                    </ul>
+                    <p class="text-xs text-gray-600">
+                        ISA 驻桥办事处已确认配合实施。感谢您的理解与配合。
+                    </p>
+                </div>
+                
+                <div class="news-card p-8">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="badge badge-info mb-3">通知</span>
+                            <h3 class="text-xl font-black text-white mb-2">春节期间列车加班通知</h3>
+                            <p class="text-gray-600 text-sm">发布时间：2026-01-15 16:00 | 发布机构：KABA 运营管理部</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed">
+                        为满足春节期间旅客出行需求，天门级列车将于 <strong class="text-cyan-400">2026年1月28日-2月8日</strong> 
+                        加开临时班次。高峰时段（7:00-21:00）班次间隔缩短至 <strong class="text-cyan-400">10 分钟</strong>。
+                        建议提前在线预订车票。
+                    </p>
+                </div>
+                
+                <div class="news-card p-8">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="badge badge-info mb-3">通知</span>
+                            <h3 class="text-xl font-black text-white mb-2">第三桥段观景平台升级完成</h3>
+                            <p class="text-gray-600 text-sm">发布时间：2026-01-12 11:00 | 发布机构：KABA 运营管理部</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        第三桥段（KM 27-37）海神观景平台升级改造工程已竣工。新增全景玻璃廊道，
+                        可 360° 观赏海景。配备望远镜和实时天气显示屏。
+                    </p>
+                    <p class="text-xs text-gray-600">
+                        开放时间：每日 08:00-20:00 | T-CLASS 旅游签证持有者免费参观
+                    </p>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- 防御系统动态（内参） -->
+        <section class="mb-16">
+            <div class="flex items-center mb-8">
+                <div class="w-2 h-8 bg-gradient-to-b from-purple-400 to-transparent mr-4"></div>
+                <h2 class="text-2xl font-black text-white">联合防御动态</h2>
+            </div>
+            
+            <div class="space-y-6">
+                
+                <div class="news-card p-8 border-purple-500/30">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="badge badge-info mb-3">内参</span>
+                            <h3 class="text-xl font-black text-white mb-2">AC 十字架系统完成例行升级</h3>
+                            <p class="text-gray-600 text-sm">发布时间：2026-01-28 22:00 | 来源：AC 国防部 / JADCC 通报</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        <strong class="text-purple-400">【JADCC 内参】</strong>
+                        阿提菲克"十字架"防空系统于昨日完成 3.8.2 版本例行维护升级。
+                        升级主要涉及响应速度优化与低空目标识别模块改进。
+                    </p>
+                    <p class="text-xs text-gray-600 mb-4">
+                        <em>注：十字架系统归 AC 国防部管辖，由 JADCC 协调三方（AC天穹裁决 + 帝国圣矛 + KABA情报）联动机制。
+                        KABA 负责威胁监测与情报上报，不掌控防御系统操作权。</em>
+                    </p>
+                    <div class="bg-purple-900/20 border border-purple-500/30 p-4">
+                        <p class="text-sm text-purple-300">
+                            ℹ️ 升级期间（1月28日 02:00-04:00）系统短暂切换至备用模式，未影响大桥正常运营。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="news-card p-8 border-purple-500/30">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="badge badge-success mb-3">演习</span>
+                            <h3 class="text-xl font-black text-white mb-2">帝国-AC 年度联合防空演习圆满完成</h3>
+                            <p class="text-gray-600 text-sm">发布时间：2026-01-10 15:30 | 来源：JADCC</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        2026 年度联合防空演习于 1 月 9 日成功举行。演习模拟多目标同时来袭场景，
+                        帝国圣矛系统与 AC 天穹裁决系统联动，成功拦截全部 <strong class="text-green-400">18 枚模拟导弹</strong>，拦截率 100%。
+                    </p>
+                    <p class="text-xs text-gray-600">
+                        KABA 在演习中负责威胁探测与预警信息传递，响应时间 0.6 秒。演习期间大桥正常运营。
+                    </p>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- 表彰先进 -->
+        <section>
+            <div class="flex items-center mb-8">
+                <div class="w-2 h-8 bg-gradient-to-b from-yellow-400 to-transparent mr-4"></div>
+                <h2 class="text-2xl font-black text-white">表彰先进</h2>
+            </div>
+            
+            <div class="space-y-6">
+                
+                <div class="news-card p-8">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <span class="badge mb-3" style="background: #d4af37; color: #000;">荣誉</span>
+                            <h3 class="text-xl font-black text-white mb-2">2025 年度优秀员工表彰名单</h3>
+                            <p class="text-gray-600 text-sm">发布时间：2026-01-05 10:00 | 发布机构：KABA 人事部</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        经过严格评选，以下员工被授予 2025 年度 KABA 优秀员工称号：
+                    </p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-black/50 border border-white/10 p-6">
+                            <div class="flex items-center space-x-4 mb-3">
+                                <div class="w-12 h-12 bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white">李明轩</h4>
+                                    <p class="text-xs text-gray-600">技术维护部 - 高级工程师</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-400">
+                                成功排除第九区磁悬浮系统故障，避免重大事故。全年完成 147 项维护任务，零失误。
+                            </p>
+                        </div>
+                        
+                        <div class="bg-black/50 border border-white/10 p-6">
+                            <div class="flex items-center space-x-4 mb-3">
+                                <div class="w-12 h-12 bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white">艾米莉·沃克</h4>
+                                    <p class="text-xs text-gray-600">安全保卫部 - 巡逻队长</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-400">
+                                协助破获走私魔法物品案 3 起，抓获犯罪嫌疑人 12 名。连续 500 天无安全事故。
+                            </p>
+                        </div>
+                        
+                        <div class="bg-black/50 border border-white/10 p-6">
+                            <div class="flex items-center space-x-4 mb-3">
+                                <div class="w-12 h-12 bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white">张婷婷</h4>
+                                    <p class="text-xs text-gray-600">运营管理部 - 调度员</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-400">
+                                优化列车调度算法，将平均延误时间从 2.3 分钟降至 0.8 分钟。获旅客满意度 99.2%。
+                            </p>
+                        </div>
+                        
+                        <div class="bg-black/50 border border-white/10 p-6">
+                            <div class="flex items-center space-x-4 mb-3">
+                                <div class="w-12 h-12 bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white">卡洛斯·罗德里格斯</h4>
+                                    <p class="text-xs text-gray-600">应急响应部 - 医疗队长</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-400">
+                                成功救治突发心脏病乘客 8 例，交通事故伤员 23 例。平均到达现场时间 4.2 分钟。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 bg-cyan-900/20 border border-cyan-500/30 p-4">
+                        <p class="text-sm text-cyan-400">
+                            🏆 恭喜以上员工！每人将获得 5,000 金克朗奖金及年度带薪休假 5 天。
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+        
+    </main>
+    
+    <footer class="border-t border-white/5 bg-black py-12 mt-20">
+        <div class="text-center text-gray-700 text-xs">© 2026 KABA • News Center</div>
+    </footer>
+    
+</body>
+</html>

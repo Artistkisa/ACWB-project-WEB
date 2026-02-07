@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>822纪念馆 | KABA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #050811;
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .font-orbitron { font-family: 'Orbitron', monospace; }
+        
+        .memorial-glow {
+            box-shadow: 0 0 30px rgba(255, 23, 68, 0.3);
+            animation: pulse-red 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 30px rgba(255, 23, 68, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(255, 23, 68, 0.5); }
+        }
+        
+        .name-wall {
+            column-count: 4;
+            column-gap: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .name-wall { column-count: 2; }
+        }
+        
+        .name-item {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 2px solid rgba(255, 23, 68, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .name-item:hover {
+            background: rgba(255, 23, 68, 0.1);
+            border-left-color: #ff1744;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- 顶部警示 -->
+    <div class="bg-gradient-to-r from-red-900/30 via-red-600/40 to-red-900/30 border-y border-red-500/30 py-3 px-4">
+        <div class="flex items-center justify-center space-x-4 text-xs">
+            <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 9a1 1 0 112 0v4a1 1 0 11-2 0V9zm1-5a1 1 0 100 2 1 1 0 000-2z"/>
+            </svg>
+            <p class="text-red-300 font-orbitron tracking-widest">
+                [ 822 MEMORIAL ] 永不遗忘 · 永不重蹈 | NEVER FORGET · NEVER AGAIN
+            </p>
+            <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 9a1 1 0 112 0v4a1 1 0 11-2 0V9zm1-5a1 1 0 100 2 1 1 0 000-2z"/>
+            </svg>
+        </div>
+    </div>
+    
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/80 border-b border-red-500/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <img src="iconic1.png" alt="KABA" class="h-10 w-10 object-contain brightness-110">
+                    <div>
+                        <h1 class="font-orbitron font-black text-sm tracking-widest text-white">822 MEMORIAL</h1>
+                        <p class="text-[8px] text-red-400 tracking-wider">纪念馆</p>
+                    </div>
+                </div>
+                <a href="index.html" class="text-gray-400 hover:text-red-400 font-bold text-sm">返回首页</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="max-w-7xl mx-auto px-6 py-16">
+        
+        <!-- 页头 -->
+        <div class="text-center mb-20">
+            <div class="inline-block memorial-glow mb-8 p-8 bg-black border-2 border-red-500/50">
+                <p class="text-red-400 text-sm font-bold tracking-[0.4em] uppercase mb-4">In Memoriam</p>
+                <h1 class="text-6xl font-black text-white mb-4">
+                    822
+                </h1>
+                <p class="text-gray-500 text-sm mb-2">西元 1748 年 8 月 22 日</p>
+                <p class="text-gray-600 text-xs">22:42 - 23:25</p>
+            </div>
+            
+            <p class="text-2xl text-gray-400 italic max-w-3xl mx-auto leading-relaxed">
+                "此地曾是耀阳站，362 个灵魂在此陨落。<br>
+                他们的死亡提醒我们：警惕是自由与安全必须支付的代价。"
+            </p>
+        </div>
+        
+        <!-- 事件数据 -->
+        <section class="mb-20">
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="bg-gradient-to-br from-red-900/20 to-black/40 border-2 border-red-500/30 p-8 text-center">
+                    <p class="text-6xl font-orbitron font-black text-red-400 mb-2">362</p>
+                    <p class="text-sm text-gray-500">遇难者</p>
+                </div>
+                <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8 text-center">
+                    <p class="text-6xl font-orbitron font-black text-white mb-2">711</p>
+                    <p class="text-sm text-gray-500">受伤者</p>
+                </div>
+                <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8 text-center">
+                    <p class="text-6xl font-orbitron font-black text-white mb-2">43</p>
+                    <p class="text-sm text-gray-500">分钟（响应时间）</p>
+                </div>
+                <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8 text-center">
+                    <p class="text-6xl font-orbitron font-black text-white mb-2">95</p>
+                    <p class="text-sm text-gray-500">发炮弹数</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 遇难者分类 -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-black text-white mb-12 text-center">遇难者名单</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                
+                <!-- ATPD警官 -->
+                <div class="bg-gradient-to-br from-blue-900/20 to-black/40 border border-blue-500/30 p-8">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-12 h-12 bg-blue-500/20 border-2 border-blue-500 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-black text-white">ATPD 警官</h3>
+                            <p class="text-blue-400 text-sm">38 人</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        他们是第一批赶到现场的执法者。面对地狱犬的魔法陷阱和火力，
+                        毫不退缩。首批突击队 12 人全部阵亡于静滞力场。
+                    </p>
+                </div>
+                
+                <!-- AIAMT队员 -->
+                <div class="bg-gradient-to-br from-purple-900/20 to-black/40 border border-purple-500/30 p-8">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-12 h-12 bg-purple-500/20 border-2 border-purple-500 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-black text-white">AIAMT 队员</h3>
+                            <p class="text-purple-400 text-sm">5 人</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        魔导袭击机动队的精锐战士，在与梅巴尔·雷的正面交战中阵亡。
+                        3 人死于序列闪电直击，2 人在掩护队友时被集火击毙。
+                    </p>
+                </div>
+                
+                <!-- 平民 -->
+                <div class="bg-gradient-to-br from-yellow-900/20 to-black/40 border p-8" style="border-color: rgba(212,175,55,0.3);">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-12 h-12 border-2 flex items-center justify-center" style="background: rgba(212,175,55,0.2); border-color: #d4af37;">
+                            <svg class="w-6 h-6" style="color: #d4af37;" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-black text-white">平民遇难者</h3>
+                            <p class="text-sm" style="color: #d4af37;">319 人</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        他们只是普通的通勤者、游客、工作人员。在耀阳站等待列车，
+                        或在第四区工作。他们不该死于战争。包括 87 名外籍学者（12 国）。
+                    </p>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- 完整名单 -->
+        <section class="mb-20">
+            <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-12">
+                <h3 class="text-2xl font-black text-white mb-8 text-center">他们的名字</h3>
+                
+                <div class="name-wall text-sm">
+                    <!-- ATPD 警官 -->
+                    <div class="name-item">
+                        <p class="text-blue-400 font-bold mb-1">张明辉</p>
+                        <p class="text-gray-600 text-xs">ATPD 突击队长，38岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="text-blue-400 font-bold mb-1">艾伦·麦克风</p>
+                        <p class="text-gray-600 text-xs">ATPD 警官，29岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="text-blue-400 font-bold mb-1">李雪莹</p>
+                        <p class="text-gray-600 text-xs">ATPD 警官，27岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="text-blue-400 font-bold mb-1">卡尔·施密特</p>
+                        <p class="text-gray-600 text-xs">ATPD 狙击手，35岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="text-blue-400 font-bold mb-1">王浩然</p>
+                        <p class="text-gray-600 text-xs">ATPD 快反队员，24岁</p>
+                    </div>
+                    
+                    <!-- AIAMT -->
+                    <div class="name-item">
+                        <p class="text-purple-400 font-bold mb-1">索菲亚·诺瓦克</p>
+                        <p class="text-gray-600 text-xs">AIAMT 魔导师，31岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="text-purple-400 font-bold mb-1">赵天宇</p>
+                        <p class="text-gray-600 text-xs">AIAMT 战术专家，33岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="text-purple-400 font-bold mb-1">维克多·佩特罗夫</p>
+                        <p class="text-gray-600 text-xs">AIAMT 队员，28岁</p>
+                    </div>
+                    
+                    <!-- 平民（部分示例） -->
+                    <div class="name-item">
+                        <p class="font-bold mb-1" style="color: #d4af37;">陈晓梅</p>
+                        <p class="text-gray-600 text-xs">教师，耀阳站乘客，42岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="font-bold mb-1" style="color: #d4af37;">约翰·史密斯</p>
+                        <p class="text-gray-600 text-xs">工程师，外籍学者，51岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="font-bold mb-1" style="color: #d4af37;">刘思远</p>
+                        <p class="text-gray-600 text-xs">学生，19岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="font-bold mb-1" style="color: #d4af37;">玛丽亚·冈萨雷斯</p>
+                        <p class="text-gray-600 text-xs">医生，外籍学者，45岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="font-bold mb-1" style="color: #d4af37;">周建国</p>
+                        <p class="text-gray-600 text-xs">商人，耀阳站乘客，38岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="font-bold mb-1" style="color: #d4af37;">艾米丽·布朗</p>
+                        <p class="text-gray-600 text-xs">记者，32岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="font-bold mb-1" style="color: #d4af37;">林子豪</p>
+                        <p class="text-gray-600 text-xs">KABA 技术员，29岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="font-bold mb-1" style="color: #d4af37;">亚历山大·伊万诺夫</p>
+                        <p class="text-gray-600 text-xs">物理学家，外籍学者，58岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="font-bold mb-1" style="color: #d4af37;">杨雨欣</p>
+                        <p class="text-gray-600 text-xs">护士，25岁</p>
+                    </div>
+                    <div class="name-item">
+                        <p class="font-bold mb-1" style="color: #d4af37;">托马斯·安德森</p>
+                        <p class="text-gray-600 text-xs">建筑师，47岁</p>
+                    </div>
+                    
+                    <div class="name-item">
+                        <p class="text-gray-500 italic text-xs">... 以及其余 352 位遇难者</p>
+                    </div>
+                </div>
+                
+                <div class="mt-12 text-center">
+                    <p class="text-gray-600 text-sm italic">
+                        完整名单收录于 KABA 档案馆 | 每年 8 月 22 日公开祭奠
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 誓言墙 -->
+        <section class="mb-20">
+            <div class="bg-gradient-to-r from-red-900/30 via-black to-red-900/30 border-y-2 border-red-500/50 py-16">
+                <div class="max-w-4xl mx-auto text-center px-6">
+                    <h2 class="text-4xl font-black text-white mb-8">永不遗忘 · 永不重蹈</h2>
+                    <div class="text-xl text-gray-400 leading-relaxed space-y-4">
+                        <p>我们铭记 362 个名字。</p>
+                        <p>我们铭记他们的笑容、梦想、未竟的人生。</p>
+                        <p>我们铭记那 43 分钟的黑暗，与随之而来的光明。</p>
+                        <p class="text-red-400 font-bold mt-8">警惕是自由的代价。我们永远警惕。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 纪念活动 -->
+        <section>
+            <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-12">
+                <h2 class="text-2xl font-black text-white mb-8 text-center">每年 8 月 22 日</h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-bold text-cyan-400 mb-4">纪念活动</h3>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li>• 22:42 全大桥默哀一分钟</li>
+                            <li>• KABA 总部降半旗</li>
+                            <li>• 耀阳站遗址献花仪式</li>
+                            <li>• 遇难者家属慰问活动</li>
+                            <li>• 防灾演习与安全教育</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-cyan-400 mb-4">遗址参观</h3>
+                        <p class="text-sm text-gray-400 mb-4">
+                            耀阳站遗址已改建为纪念公园，免费向公众开放。
+                            中央竖立纪念碑，刻有 362 位遇难者姓名。
+                        </p>
+                        <p class="text-xs text-gray-600">
+                            地址：大桥第四区 KM 37-41<br>
+                            开放时间：全年 24 小时
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+    
+    <footer class="border-t border-red-500/20 bg-black py-12 mt-20">
+        <div class="text-center">
+            <p class="text-gray-700 text-xs mb-2">© 2026 KABA • 822 Memorial Foundation</p>
+            <p class="text-red-400 text-sm font-orbitron tracking-widest">NEVER FORGET · NEVER AGAIN</p>
+        </div>
+    </footer>
+    
+</body>
+</html>

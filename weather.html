@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气与海况 | KABA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #050811;
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .font-orbitron { font-family: 'Orbitron', monospace; }
+        
+        .weather-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .level-safe { border-color: #4ade80; background: rgba(74, 222, 128, 0.1); }
+        .level-caution { border-color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
+        .level-warning { border-color: #fb923c; background: rgba(251, 146, 60, 0.1); }
+        .level-danger { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+        
+        .wave-animation {
+            animation: wave 3s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/60 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <img src="iconic1.png" alt="KABA" class="h-10 w-10 object-contain brightness-110">
+                    <div>
+                        <h1 class="font-orbitron font-black text-sm tracking-widest text-white">WEATHER</h1>
+                        <p class="text-[8px] text-cyan-400 tracking-wider">天气与海况</p>
+                    </div>
+                </div>
+                <a href="index.html" class="text-gray-400 hover:text-cyan-400 font-bold text-sm">返回首页</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="max-w-7xl mx-auto px-6 py-16">
+        
+        <div class="text-center mb-20">
+            <h1 class="text-5xl font-black text-white mb-4">天气与海况</h1>
+            <p class="text-gray-500 text-sm mb-8">K-A BRIDGE WEATHER & SEA CONDITIONS</p>
+            <div class="flex items-center justify-center space-x-2 text-sm">
+                <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                <p class="text-gray-400">实时数据更新于：<span class="text-cyan-400 font-orbitron ml-2" id="update-time">2026-02-07 15:23</span></p>
+            </div>
+        </div>
+        
+        <!-- 总体通行建议 -->
+        <section class="mb-16">
+            <div class="bg-gradient-to-br from-green-900/20 to-black/40 border-2 border-green-500/50 p-12 text-center">
+                <div class="inline-block mb-6">
+                    <svg class="w-20 h-20 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-black text-white mb-4">适宜通行</h2>
+                <p class="text-green-400 text-lg mb-6">SAFE TO TRAVEL</p>
+                <p class="text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                    当前天气条件良好，海况平稳。天门级列车正常运营，预计单程用时 7 分钟。
+                    未来 24 小时内气象条件稳定，适合通行。
+                </p>
+            </div>
+        </section>
+        
+        <!-- 大桥沿线天气 -->
+        <section class="mb-16">
+            <div class="flex items-center mb-8">
+                <div class="w-2 h-8 bg-gradient-to-b from-cyan-400 to-transparent mr-4"></div>
+                <h2 class="text-2xl font-black text-white">大桥沿线天气</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                
+                <!-- 帝国端 -->
+                <div class="weather-card p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-black text-white mb-1">帝国端</h3>
+                            <p class="text-xs text-gray-600">KM 0 - 37</p>
+                        </div>
+                        <svg class="w-16 h-16 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                        </svg>
+                    </div>
+                    <div class="mb-6">
+                        <p class="text-5xl font-orbitron font-black text-white mb-2">18°C</p>
+                        <p class="text-sm text-gray-500">多云</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-600">风力</p>
+                            <p class="text-white font-orbitron">3 级</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">能见度</p>
+                            <p class="text-white font-orbitron">15 km</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">湿度</p>
+                            <p class="text-white font-orbitron">68%</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">气压</p>
+                            <p class="text-white font-orbitron">1013 hPa</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 中央海域 -->
+                <div class="weather-card p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-black text-white mb-1">中央海域</h3>
+                            <p class="text-xs text-gray-600">KM 37 - 74</p>
+                        </div>
+                        <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z"/>
+                        </svg>
+                    </div>
+                    <div class="mb-6">
+                        <p class="text-5xl font-orbitron font-black text-white mb-2">16°C</p>
+                        <p class="text-sm text-gray-500">阴</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-600">风力</p>
+                            <p class="text-white font-orbitron">4 级</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">能见度</p>
+                            <p class="text-white font-orbitron">12 km</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">湿度</p>
+                            <p class="text-white font-orbitron">75%</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">气压</p>
+                            <p class="text-white font-orbitron">1012 hPa</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AC端 -->
+                <div class="weather-card p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-black text-white mb-1">AC 端</h3>
+                            <p class="text-xs text-gray-600">KM 74 - 111</p>
+                        </div>
+                        <svg class="w-16 h-16 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                        </svg>
+                    </div>
+                    <div class="mb-6">
+                        <p class="text-5xl font-orbitron font-black text-white mb-2">19°C</p>
+                        <p class="text-sm text-gray-500">晴</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-600">风力</p>
+                            <p class="text-white font-orbitron">3 级</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">能见度</p>
+                            <p class="text-white font-orbitron">20 km</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">湿度</p>
+                            <p class="text-white font-orbitron">62%</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">气压</p>
+                            <p class="text-white font-orbitron">1014 hPa</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+        
+        <!-- 海况预警 -->
+        <section class="mb-16">
+            <div class="flex items-center mb-8">
+                <div class="w-2 h-8 bg-gradient-to-b from-blue-400 to-transparent mr-4"></div>
+                <h2 class="text-2xl font-black text-white">海况监测</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                
+                <!-- 浪高 -->
+                <div class="weather-card level-safe p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-black text-white">浪高</h3>
+                        <div class="wave-animation">
+                            <svg class="w-12 h-12 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h1a1 1 0 010 2H6a1 1 0 01-1-1zM8 10a1 1 0 011-1h1a1 1 0 010 2H9a1 1 0 01-1-1zM11 10a1 1 0 011-1h1a1 1 0 010 2h-1a1 1 0 01-1-1z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-5xl font-orbitron font-black text-green-400 mb-4">0.8 m</p>
+                    <p class="text-sm text-gray-400 mb-4">平均浪高 | 最大浪高 1.2 m</p>
+                    <div class="bg-green-900/20 border border-green-500/30 p-4">
+                        <p class="text-sm text-green-300">✓ 安全 - 海况平稳，适合通行</p>
+                    </div>
+                </div>
+                
+                <!-- 风速 -->
+                <div class="weather-card level-safe p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-black text-white">风速</h3>
+                        <svg class="w-12 h-12 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </div>
+                    <p class="text-5xl font-orbitron font-black text-green-400 mb-4">18 km/h</p>
+                    <p class="text-sm text-gray-400 mb-4">东南风 4 级 | 阵风 5 级</p>
+                    <div class="bg-green-900/20 border border-green-500/30 p-4">
+                        <p class="text-sm text-green-300">✓ 安全 - 风力适中，列车正常运行</p>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- 海况等级说明 -->
+            <div class="weather-card p-8">
+                <h3 class="text-lg font-bold text-white mb-6">海况等级与通行建议</h3>
+                
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div class="bg-green-900/20 border-2 border-green-500/50 p-4">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="w-4 h-4 bg-green-400 rounded-full"></div>
+                            <h4 class="font-bold text-green-400">1级 安全</h4>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">浪高 < 1.5m</p>
+                        <p class="text-xs text-gray-400 mb-2">风力 ≤ 6级</p>
+                        <p class="text-xs text-green-300">✓ 正常通行</p>
+                    </div>
+                    
+                    <div class="bg-yellow-900/20 border-2 border-yellow-500/50 p-4">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="w-4 h-4 bg-yellow-400 rounded-full"></div>
+                            <h4 class="font-bold text-yellow-400">2级 注意</h4>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">浪高 1.5-2.5m</p>
+                        <p class="text-xs text-gray-400 mb-2">风力 6-8级</p>
+                        <p class="text-xs text-yellow-300">⚠ 限速运行</p>
+                    </div>
+                    
+                    <div class="bg-orange-900/20 border-2 border-orange-500/50 p-4">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="w-4 h-4 bg-orange-400 rounded-full"></div>
+                            <h4 class="font-bold text-orange-400">3级 警告</h4>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">浪高 2.5-4m</p>
+                        <p class="text-xs text-gray-400 mb-2">风力 8-10级</p>
+                        <p class="text-xs text-orange-300">⚠ 严重限速</p>
+                    </div>
+                    
+                    <div class="bg-red-900/20 border-2 border-red-500/50 p-4">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="w-4 h-4 bg-red-400 rounded-full"></div>
+                            <h4 class="font-bold text-red-400">4级 危险</h4>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">浪高 > 4m</p>
+                        <p class="text-xs text-gray-400 mb-2">风力 > 10级</p>
+                        <p class="text-xs text-red-300">✕ 暂停运营</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 未来24小时预报 -->
+        <section class="mb-16">
+            <div class="flex items-center mb-8">
+                <div class="w-2 h-8 bg-gradient-to-b from-purple-400 to-transparent mr-4"></div>
+                <h2 class="text-2xl font-black text-white">未来 24 小时预报</h2>
+            </div>
+            
+            <div class="weather-card p-8">
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-6">
+                    
+                    <div class="text-center">
+                        <p class="text-xs text-gray-600 mb-2">18:00</p>
+                        <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z"/>
+                        </svg>
+                        <p class="text-lg font-orbitron font-bold text-white">17°C</p>
+                        <p class="text-xs text-gray-600">阴</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-xs text-gray-600 mb-2">21:00</p>
+                        <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z"/>
+                        </svg>
+                        <p class="text-lg font-orbitron font-bold text-white">15°C</p>
+                        <p class="text-xs text-gray-600">多云</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-xs text-gray-600 mb-2">00:00</p>
+                        <svg class="w-12 h-12 text-gray-600 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                        </svg>
+                        <p class="text-lg font-orbitron font-bold text-white">13°C</p>
+                        <p class="text-xs text-gray-600">晴</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-xs text-gray-600 mb-2">06:00</p>
+                        <svg class="w-12 h-12 text-yellow-400 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0z"/>
+                        </svg>
+                        <p class="text-lg font-orbitron font-bold text-white">14°C</p>
+                        <p class="text-xs text-gray-600">晴</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-xs text-gray-600 mb-2">12:00</p>
+                        <svg class="w-12 h-12 text-yellow-400 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0z"/>
+                        </svg>
+                        <p class="text-lg font-orbitron font-bold text-white">20°C</p>
+                        <p class="text-xs text-gray-600">晴</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-xs text-gray-600 mb-2">15:00</p>
+                        <svg class="w-12 h-12 text-yellow-400 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0z"/>
+                        </svg>
+                        <p class="text-lg font-orbitron font-bold text-white">21°C</p>
+                        <p class="text-xs text-gray-600">晴</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特殊提醒 -->
+        <section>
+            <div class="bg-gradient-to-br from-white/5 to-black/40 border border-white/10 p-8">
+                <h3 class="text-lg font-bold text-white mb-6">出行建议</h3>
+                
+                <div class="space-y-4 text-sm">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+                        <p class="text-gray-400">
+                            <strong class="text-white">最佳通行时段：</strong>明日 09:00 - 18:00，天气晴朗，能见度佳。
+                        </p>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+                        <p class="text-gray-400">
+                            <strong class="text-white">海上观景：</strong>今日能见度 12-20 km，可清晰观赏海景和两侧城市天际线。
+                        </p>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+                        <p class="text-gray-400">
+                            <strong class="text-white">穿衣指南：</strong>气温 13-21°C，建议携带轻便外套。车内温度恒定 22°C。
+                        </p>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+                        <p class="text-gray-400">
+                            <strong class="text-white">未来趋势：</strong>未来 3 天天气稳定，无极端天气预警，适合安排行程。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="bg-cyan-900/20 border border-cyan-500/30 p-4 mt-6">
+                    <p class="text-sm text-cyan-400">
+                        💡 天气数据每 30 分钟更新一次。如遇突发天气变化，KABA 将通过短信和邮件通知所有预订乘客。
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+    
+    <footer class="border-t border-white/5 bg-black py-12 mt-20">
+        <div class="text-center text-gray-700 text-xs">© 2026 KABA • Weather Service</div>
+    </footer>
+    
+    <script>
+        // 更新时间显示
+        function updateTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('zh-CN', { hour12: false });
+            const date = '2026-02-07';
+            document.getElementById('update-time').textContent = `${date} ${time}`;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+    
+</body>
+</html>

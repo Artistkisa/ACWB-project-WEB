@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组织架构 | KABA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #050811;
+            color: #e0e0e0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .font-orbitron { font-family: 'Orbitron', monospace; }
+        .org-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        .org-card:hover {
+            border-color: #00f2ff;
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/60 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <img src="iconic1.png" alt="KABA" class="h-10 w-10 object-contain brightness-110">
+                    <div>
+                        <h1 class="font-orbitron font-black text-sm tracking-widest text-white">ORGANIZATION</h1>
+                        <p class="text-[8px] text-cyan-400 tracking-wider">组织架构</p>
+                    </div>
+                </div>
+                <a href="index.html" class="text-gray-400 hover:text-cyan-400 font-bold text-sm">返回首页</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="max-w-7xl mx-auto px-6 py-16">
+        <div class="text-center mb-20">
+            <img src="iconic1.png" class="h-20 w-20 object-contain opacity-50 mx-auto mb-6" alt="KABA">
+            <h1 class="text-5xl font-black text-white mb-4">关于 KABA</h1>
+            <p class="text-gray-500 text-sm mb-8">K-A BRIDGE AUTHORITY</p>
+            <p class="text-gray-400 max-w-3xl mx-auto">KABA 是由帝国与 AC 共同设立的准军事化管理机构，负责大桥运营、安保及中立贸易区管理。</p>
+        </div>
+        
+        <section class="mb-20">
+            <h2 class="text-3xl font-black text-white mb-12">理事会（7人制）</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="org-card p-6">
+                    <h3 class="text-xl font-black text-white mb-4">帝国代表 3席</h3>
+                    <p class="text-sm text-gray-400">包括外交官、军事顾问、经济专家</p>
+                </div>
+                <div class="org-card p-6">
+                    <h3 class="text-xl font-black text-white mb-4">AC 代表 3席</h3>
+                    <p class="text-sm text-gray-400">包括科技官员、安全专家、商务代表</p>
+                </div>
+                <div class="org-card p-6">
+                    <h3 class="text-xl font-black text-white mb-4">独立专家 1席</h3>
+                    <p class="text-sm text-gray-400">通常为 ISA 高级官员</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="mb-20">
+            <h2 class="text-3xl font-black text-white mb-12">四大核心部门</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="org-card p-8">
+                    <h3 class="text-2xl font-black text-white mb-4">运营管理部</h3>
+                    <p class="text-sm text-cyan-400 mb-6">800 人</p>
+                    <p class="text-gray-400">列车调度、通行证审批、贸易区管理</p>
+                </div>
+                <div class="org-card p-8">
+                    <h3 class="text-2xl font-black text-white mb-4">安全保卫部</h3>
+                    <p class="text-sm text-red-400 mb-6">1,200 人</p>
+                    <p class="text-gray-400">24/7巡逻、安检、反恐情报</p>
+                </div>
+                <div class="org-card p-8">
+                    <h3 class="text-2xl font-black text-white mb-4">技术维护部</h3>
+                    <p class="text-sm text-yellow-400 mb-6" style="color: #d4af37;">600 人</p>
+                    <p class="text-gray-400">结构监测、磁悬浮维护、能源系统</p>
+                </div>
+                <div class="org-card p-8">
+                    <h3 class="text-2xl font-black text-white mb-4">应急响应部</h3>
+                    <p class="text-sm text-orange-400 mb-6">300 人</p>
+                    <p class="text-gray-400">灾害预警、医疗救援、消防处理</p>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2 class="text-3xl font-black text-white mb-12">与其他机构的关系</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="org-card p-6">
+                    <h3 class="text-lg font-bold text-white mb-3">KABA ↔ ATPD</h3>
+                    <p class="text-sm text-gray-400">KABA 拥有独立执法权，重罪移交 ATPD</p>
+                </div>
+                <div class="org-card p-6">
+                    <h3 class="text-lg font-bold text-white mb-3">KABA ↔ ISA</h3>
+                    <p class="text-sm text-gray-400">ISA 负责 M/S 级背景审查，监督合规</p>
+                </div>
+                <div class="org-card p-6">
+                    <h3 class="text-lg font-bold text-white mb-3">KABA ↔ JADCC</h3>
+                    <p class="text-sm text-gray-400">KABA 提供情报，JADCC 掌控防御系统</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="border-t border-white/5 bg-black py-12 mt-20">
+        <div class="text-center text-gray-700 text-xs">© 2026 KABA • All Rights Reserved</div>
+    </footer>
+</body>
+</html>
